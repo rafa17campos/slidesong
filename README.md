@@ -29,7 +29,8 @@ How to use it, step by step: the [user guide](docs/user-guide.md) ([en español]
 cp secrets.env.example secrets.env && chmod 600 secrets.env   # then fill it in
 docker compose up -d --build                                  # http://localhost:8096
 ```
-`secrets.env.example` lists every setting. The data (projects, songs, videos, what was learned) lives in `./data`.
+`secrets.env.example` lists every setting. The data (projects, songs, videos, what was learned) lives in `./data`, or wherever `SLIDESONG_DATA` points in
+`.env` (for example next to your other Docker volumes).
 
 ### Immich access
 - **API key** (Immich → Account settings → API keys) with read permissions only: `asset.read`, `asset.view`,

@@ -12,6 +12,6 @@ services:
     environment:
       TZ: ${TZ:-UTC}
     volumes:
-      - ./data:/data
+      - ${SLIDESONG_DATA:-./data}:/data   # set SLIDESONG_DATA in .env to keep the data elsewhere
     logging:
       driver: local               # rotated (20 MB × 5 by default): the json-file default grows without limit
