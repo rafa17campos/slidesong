@@ -1,0 +1,149 @@
+{
+  "done": {
+    "render": "Vídeo listo",
+    "export": "Proyecto editable listo para descargar",
+    "suggest": "Fotos elegidas",
+    "analyze": "Canción analizada",
+    "see": "Ver",
+    "review": "Revisar",
+    "choosePhotos": "Elegir fotos"
+  },
+  "saveFailed": "No se ha guardado el cambio: {{error}}",
+  "history": {
+    "undone": "Deshecho: {{what}}",
+    "redone": "Rehecho: {{what}}",
+    "undo": "Deshacer: {{what}}",
+    "redo": "Rehacer: {{what}}",
+    "undoTitle": "Deshacer: {{what}} (Ctrl Z)",
+    "redoTitle": "Rehacer: {{what}} (Ctrl Mayús Z)",
+    "nothingToUndo": "Nada que deshacer",
+    "nothingToRedo": "Nada que rehacer"
+  },
+  "analyze": {
+    "confirm": {
+      "title": "¿Volver a analizar la canción?",
+      "body": "Rehace los planos. Cada foto elegida (y las fijadas) pasa al plano nuevo del mismo momento; alguna puede quedarse fuera. Se borran el historial de deshacer y las transiciones elegidas a mano. Hazlo solo si has cambiado la letra o el MP3.",
+      "confirm": "Volver a analizar"
+    }
+  },
+  "suggest": {
+    "noPeople": {
+      "title": "¿Sugerir sin elegir personas?",
+      "body": "No has elegido a nadie en «Quién sale»: se usarán todas las fotos de esas fechas.",
+      "confirm": "Sugerir igualmente"
+    },
+    "checking": "Comprobando qué fotos están analizadas…",
+    "noGpu": {
+      "title": "¿Sugerir sin {{name}}?",
+      "pending_one": "{{name}} está apagado y <b>{{pending}}</b> de las {{pool}} fotos candidatas no está analizada en la GPU.",
+      "pending_other": "{{name}} está apagado y <b>{{pending}}</b> de las {{pool}} fotos candidatas no están analizadas en la GPU.",
+      "risk": "Esas fotos pueden salir <b>sin el aviso de foto sensible</b> (y «Evitarlas» no las filtra), y su calidad (ojos, sonrisa, enfoque) no cuenta. Si enciendes {{name}}, se analizan solas al sugerir.",
+      "confirm": "Sugerir igualmente"
+    }
+  },
+  "action": {
+    "wait": "Espera a que termine: {{job}}",
+    "moment": "Un momento…",
+    "nextPhotos": "Siguiente: Fotos",
+    "analyze": "Analizar la canción",
+    "analyzeShort": "Analizar",
+    "suggest": "Sugerir fotos",
+    "suggestAgain": "Volver a sugerir",
+    "suggestShort": "Sugerir",
+    "preview": "Vista previa",
+    "previewShort": "Previa",
+    "final": "Vídeo final",
+    "finalShort": "Final"
+  },
+  "freeze": {
+    "confirm": {
+      "title": "¿Bloquear el proyecto?",
+      "body": "Se guarda tal como está: nada de fotos, encuadres, ajustes, letra ni canción se podrá cambiar (ni borrar el proyecto). Podrás ver y crear vídeos, y crear una versión nueva para seguir a partir de él. Se puede desbloquear.",
+      "confirm": "Bloquear"
+    },
+    "done": "Proyecto bloqueado"
+  },
+  "unfreeze": {
+    "confirm": {
+      "title": "¿Desbloquear el proyecto?",
+      "body": "Se podrá volver a cambiar. Si quieres conservar esta versión tal cual, mejor crea una versión nueva y cambia esa.",
+      "confirm": "Desbloquear"
+    },
+    "done": "Proyecto desbloqueado"
+  },
+  "delete": {
+    "confirm": {
+      "title": "¿Borrar «{{title}}»?",
+      "body": "Se borran el proyecto, su canción y sus vídeos de Slidesong. Las fotos de Immich no se tocan. No se puede deshacer.",
+      "confirm": "Borrar el proyecto"
+    },
+    "done": "«{{title}}» borrado"
+  },
+  "copy": {
+    "ref": "proyecto {{id}}",
+    "done": "Copiado: pégalo en tu chat con Claude, con tu pregunta",
+    "failed": "No se pudo copiar: proyecto {{id}}"
+  },
+  "stale": "{{error}}: lo que ves puede no estar al día.",
+  "frozen": {
+    "badge": "Bloqueado",
+    "badgeTitle": "Bloqueado: se puede ver y crear vídeos, pero no cambiar",
+    "bar": "<b>Bloqueado</b> el {{date}}: se puede ver y crear vídeos, pero no cambiar.",
+    "newVersion": "Crear una versión nueva",
+    "newVersionShort": "Versión nueva",
+    "unlock": "Desbloquear"
+  },
+  "versionOf": "Versión de <link>«{{title}}»</link>",
+  "menu": {
+    "label": "Más opciones del proyecto",
+    "newVersion": "Crear una versión nueva…",
+    "unlock": "Desbloquear…",
+    "lock": "Bloquear (terminado)…",
+    "backup": "Copia de seguridad…",
+    "copyRef": "Copiar referencia para Claude",
+    "delete": "Borrar el proyecto",
+    "unlockToDelete": "Desbloquéalo antes para poder borrarlo"
+  },
+  "header": {
+    "back": "Volver a tus vídeos",
+    "notSaved": "No se ha guardado · Reintentar",
+    "saving": "Guardando…",
+    "saved": "Guardado"
+  },
+  "tabs": {
+    "label": "Pasos del proyecto",
+    "step": "Paso {{n}}: {{name}}",
+    "done": "hecho",
+    "warnings_one": "{{count}} aviso",
+    "warnings_other": "{{count}} avisos",
+    "working": "trabajando",
+    "shots_one": "{{count}} plano",
+    "shots_other": "{{count}} planos",
+    "videos_one": "{{count}} vídeo",
+    "videos_other": "{{count}} vídeos",
+    "warnedShots": "Planos con aviso"
+  },
+  "job": {
+    "where": "en {{where}}",
+    "cancel": "Cancelar: {{job}}",
+    "runningOn": "Se está haciendo en {{where}}",
+    "cancelling": "Cancelando «{{job}}»…",
+    "nothingHalfDone": "no se guarda nada a medias",
+    "cancelled": "{{job}}: cancelado",
+    "unchanged": "todo sigue como antes",
+    "closeNotice": "Cerrar este aviso",
+    "failed": "{{job}}: no se pudo terminar",
+    "details": "Detalles",
+    "prep": "Analizando las fotos<span> del proyecto en la GPU</span>:",
+    "prepCount": "{{done}} de {{total}}",
+    "left": " · quedan ≈ {{left}}",
+    "waiting": "esperando a {{where}}"
+  },
+  "newVersion": {
+    "title": "Crear una versión nueva",
+    "created": "Versión nueva creada a partir de «{{title}}»",
+    "body": "Copia todo el montaje de «{{title}}»: la canción y su análisis, la letra, las fotos y las fijadas, los encuadres, los textos y los ajustes. No copia sus vídeos ni lo que se puede deshacer. El original no cambia.",
+    "name": "Nombre de la versión nueva",
+    "create": "Crear la versión"
+  }
+}

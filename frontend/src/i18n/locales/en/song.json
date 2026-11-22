@@ -1,0 +1,58 @@
+{
+  "projectTitle": "Project title",
+  "kpi": {
+    "duration": "Length",
+    "bpm": "BPM",
+    "lines": "Lines",
+    "shots": "Shots"
+  },
+  "reanalyze": {
+    "title": "Analyze again",
+    "hint": "Only if you changed the lyrics or the MP3. This redoes the shots: photos move to the new shots at the same moment and undo history is cleared (≈ 2 min).",
+    "button": "Analyze again"
+  },
+  "analyze": {
+    "title": "Analyze the song",
+    "hint": "Detects the beat and the parts, syncs the lyrics and understands them to find photos (≈ 2 min).",
+    "button": "Analyze"
+  },
+  "structure": {
+    "title": "Structure",
+    "hint": "the app uses it to pick pace and transitions",
+    "height": "· height = energy"
+  },
+  "lyrics": {
+    "title": "Lyrics",
+    "view": "Lyrics view",
+    "synced": "Synced",
+    "edit": "Edit text",
+    "pasteHint": "Paste the lyrics, each line on its own row. Suno tags like [Chorus] mark the parts of the song.",
+    "reanalyzeHint": " If you change them, analyze again so they get synced.",
+    "placeholder": "Paste the lyrics here",
+    "syncedHint": "Each line with its moment, how it's read and which photo would illustrate it.",
+    "subHint": " Tap the subtitle icon to show the line written in the video.",
+    "sub": "Subtitle on “{{line}}”",
+    "shots_one": "shot {{list}}",
+    "shots_other": "shots {{list}}"
+  },
+  "file": {
+    "confirm": {
+      "title": "Change the song?",
+      "body": "It will need to be analyzed again. Chosen photos (and pinned ones) move to the new shots at the same moment; undo history is lost.",
+      "confirm": "Change song"
+    },
+    "uploaded": "Song uploaded: now analyze it",
+    "none": "No song yet",
+    "formats": "MP3 from Suno or elsewhere (WAV, M4A, OGG and FLAC work too)",
+    "uploading": "Uploading…",
+    "change": "Change MP3",
+    "upload": "Upload MP3"
+  },
+  "language": {
+    "label": "Sung in",
+    "auto": "Automatic",
+    "autoDetected": "Automatic ({{name}})",
+    "hint": "Used to read the lyrics: syncing them, understanding each line and the words to look for in the photos.",
+    "hintAnalyzed": "If you change it, analyze the song again so it applies."
+  }
+}

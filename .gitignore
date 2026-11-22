@@ -1,0 +1,9 @@
+data/
+.venv/
+__pycache__/
+*.pyc
+secrets.env
+face_landmarker.task
+score_in.json
+score_out.jsonl
+.env

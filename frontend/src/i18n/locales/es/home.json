@@ -1,0 +1,72 @@
+{
+  "worker": {
+    "title": "El PC de la GPU",
+    "short": {
+      "off": "apagado",
+      "busy": "ocupado",
+      "ready": "listo"
+    },
+    "long": {
+      "off": "apagado: se hace aquí, más lento",
+      "busy": "ocupado: lo nuevo espera a que termine",
+      "ready": "GPU lista"
+    }
+  },
+  "hero": {
+    "eyebrow": "Fotos de Immich + una canción",
+    "title": "Tus vídeos",
+    "lead": "Elige la canción, la app propone las fotos y tú decides."
+  },
+  "newVideo": "Nuevo vídeo",
+  "learning": {
+    "label": "Aprendizaje",
+    "heading": "La app aprende de tus cambios.",
+    "corrections_one": "{{count}} corrección",
+    "corrections_other": "{{count}} correcciones",
+    "preferences_one": "{{count}} preferencia",
+    "preferences_other": "{{count}} preferencias",
+    "counts": "{{corrections}} ({{preferences}}).",
+    "accuracy": "Acierto con tus correcciones: <acc>{{from}} % <arrow/> {{to}} %</acc> aprendiendo.",
+    "applied": "Aplicado.",
+    "notApplied": "Aún no mejora lo bastante: se siguen usando los pesos de fábrica.",
+    "notYet": "A partir de 20 correcciones empezará a ajustarse (solo si así acierta más).",
+    "open": "Ver y ajustar"
+  },
+  "backup": {
+    "label": "Copia de seguridad",
+    "heading": "Copia de seguridad.",
+    "last": "La última es del {{date}}.",
+    "never": "Aún no has hecho ninguna.",
+    "make": "Hacer copia…"
+  },
+  "state": {
+    "running": "{{job}} · {{pct}} %",
+    "progress": "Ver cómo va",
+    "step": "Paso {{n}} · {{step}}",
+    "upload": "Subir el MP3",
+    "analyze": "Analizar la canción",
+    "suggest": "Sugerir fotos",
+    "finalReady": "Vídeo final listo",
+    "watch": "Ver el vídeo",
+    "review": "Revisar el montaje"
+  },
+  "card": {
+    "locked": "Bloqueado",
+    "lockedHint": "Bloqueado: se puede ver y crear vídeos, pero no cambiar",
+    "versionOf": "Versión de «{{title}}»",
+    "shots_one": "{{count}} plano",
+    "shots_other": "{{count}} planos",
+    "noSong": "sin canción todavía",
+    "videos_one": "{{count}} vídeo",
+    "videos_other": "{{count}} vídeos",
+    "noVideos": "sin vídeos",
+    "minsAgo": "hace {{n}} min",
+    "hoursAgo": "hace {{n}} h"
+  },
+  "create": {
+    "title": "Título",
+    "placeholder": "Verano 2026 con los abuelos",
+    "hint": "Luego subirás la canción y elegirás quién sale.",
+    "submit": "Crear"
+  }
+}

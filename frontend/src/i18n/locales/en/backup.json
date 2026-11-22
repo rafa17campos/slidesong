@@ -1,0 +1,13 @@
+{
+  "title": "Backup",
+  "titleProject": "Project backup",
+  "aboutProject": "A .zip file with “{{title}}”: the whole edit, the undo history and the song. The photos aren't included: they stay in Immich.",
+  "aboutAll": "A .zip file with every project (the edit, undo history and song), what the app has learned from your changes, and the photo analysis done on the GPU. The photos aren't included: they stay in Immich.",
+  "projects_one": "{{count}} project",
+  "projects_other": "{{count}} projects",
+  "last": "last backup on {{date}}",
+  "never": "never backed up",
+  "includeVideos": "Include the videos made",
+  "restore": "To restore it: with Slidesong stopped, unzip the .zip inside the <code>data</code> folder.",
+  "preparing": "Preparing the backup: the download starts in a few seconds"
+}

@@ -1,0 +1,72 @@
+{
+  "worker": {
+    "title": "The GPU computer",
+    "short": {
+      "off": "off",
+      "busy": "busy",
+      "ready": "ready"
+    },
+    "long": {
+      "off": "off: jobs run here, more slowly",
+      "busy": "busy: new work waits until it's done",
+      "ready": "GPU ready"
+    }
+  },
+  "hero": {
+    "eyebrow": "Immich photos + a song",
+    "title": "Your videos",
+    "lead": "Pick the song, the app suggests the photos, and you decide."
+  },
+  "newVideo": "New video",
+  "learning": {
+    "label": "Learning",
+    "heading": "The app learns from your changes.",
+    "corrections_one": "{{count}} correction",
+    "corrections_other": "{{count}} corrections",
+    "preferences_one": "{{count}} preference",
+    "preferences_other": "{{count}} preferences",
+    "counts": "{{corrections}} ({{preferences}}).",
+    "accuracy": "Accuracy on your corrections: <acc>{{from}}% <arrow/> {{to}}%</acc> with learning.",
+    "applied": "Applied.",
+    "notApplied": "Not better enough yet: still using the factory weights.",
+    "notYet": "After 20 corrections it starts adjusting (only if that makes it more accurate).",
+    "open": "View and adjust"
+  },
+  "backup": {
+    "label": "Backup",
+    "heading": "Backup",
+    "last": "The last one is from {{date}}.",
+    "never": "You haven't made one yet.",
+    "make": "Back up…"
+  },
+  "state": {
+    "running": "{{job}} · {{pct}}%",
+    "progress": "See progress",
+    "step": "Step {{n}} · {{step}}",
+    "upload": "Upload the MP3",
+    "analyze": "Analyze the song",
+    "suggest": "Suggest photos",
+    "finalReady": "Final video ready",
+    "watch": "Watch the video",
+    "review": "Review the storyboard"
+  },
+  "card": {
+    "locked": "Locked",
+    "lockedHint": "Locked: you can view it and make videos, but not change it",
+    "versionOf": "Version of “{{title}}”",
+    "shots_one": "{{count}} shot",
+    "shots_other": "{{count}} shots",
+    "noSong": "no song yet",
+    "videos_one": "{{count}} video",
+    "videos_other": "{{count}} videos",
+    "noVideos": "no videos",
+    "minsAgo": "{{n}} min ago",
+    "hoursAgo": "{{n}} h ago"
+  },
+  "create": {
+    "title": "Title",
+    "placeholder": "Summer 2026 with Grandma and Grandpa",
+    "hint": "Next you'll upload the song and choose who's in them.",
+    "submit": "Create"
+  }
+}

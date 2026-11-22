@@ -1,0 +1,147 @@
+/*
+ * Slidesong · design tokens V1 — theme «Sala» (one theme, no light/dark switch).
+ * A warm dark graphite, cream text and accent (the photo paper), amber only for warnings; photos are the only
+ * colour. Contrast pairs meet WCAG AA.
+ *
+ * Tailwind 4: import after tailwindcss in the entry CSS:
+ *   @import "tailwindcss";
+ *   @import "@fontsource-variable/instrument-sans";
+ *   @import "@fontsource/instrument-serif/400.css";
+ *   @import "@fontsource/instrument-serif/400-italic.css";
+ *   @import "@fontsource-variable/caveat";
+ *   @import "./tokens.css";
+ * Every --color-* below becomes bg-*, text-*, border-*, ring-*… (bg-surface, text-muted, border-line,
+ * bg-warn-subtle, text-sec-chorus…); --font-* → font-sans/font-display/font-hand; --text-* → text-caption,
+ * text-small…; --radius-* → rounded-*; --shadow-* → shadow-*; --ease-* → ease-*.
+ */
+@theme {
+  /* ---------- surfaces: warm graphite, almost neutral (chroma ≤ 0.006) so photos read true ---------- */
+  --color-canvas: #181715; /* app background */
+  --color-surface: #201f1d; /* cards, side panel, shot sheet, header */
+  --color-raised: #2c2a27; /* popovers, menus, dialogs, toasts */
+  --color-sunken: #131110; /* wells: segmented track, KPI, neutral callouts, text fields */
+  --color-hover: #32302e; /* hover fill on canvas/surface */
+  --color-selected: #656360; /* selected segment, active step, selected chip (text-ink only; 3.1:1 vs sunken) */
+  --color-selected-ink: #f2ece3;
+  --color-stage: #0a0a0a; /* behind photos and video: neutral, near black, never tinted */
+  --color-stage-ink: #f2ece3;
+  --color-stage-muted: #b4afa8;
+  --color-onphoto: rgb(10 10 10 / 0.62); /* number, time, 📌, 🎞 badges over a photo */
+  --color-onphoto-ink: #ffffff;
+  --color-backdrop: rgb(0 0 0 / 0.62); /* behind dialogs */
+
+  /* ---------- lines ---------- */
+  --color-line: #343230; /* dividers, card borders */
+  --color-line-strong: #4f4d4a; /* hovered borders, dashed drop zones */
+  --color-line-control: #78746f; /* borders that define a control (fields, ghost buttons): ≥ 3:1 */
+
+  /* ---------- text: cream, like photo paper under a lamp ---------- */
+  --color-ink: #f2ece3; /* primary text, titles */
+  --color-ink-2: #cfcac2; /* secondary text, button labels at rest */
+  --color-muted: #aeaaa4; /* metadata, hints */
+  --color-subtle: #a09c97; /* least important (scale labels, «↳ continues»); not on bg-selected */
+  --color-disabled: #6b6965; /* disabled labels only (exempt from contrast) */
+
+  /* ---------- accent «crema»: the photo-paper cream of the text; the photos are the only colour ---------- */
+  --color-accent: #e9e1d3; /* primary button, links (always underlined), selected ring, switches, progress */
+  --color-accent-hover: #f5eee2;
+  --color-accent-active: #d6cdbe;
+  --color-accent-ink: #1a1815; /* text/icons on a solid accent */
+  --color-accent-subtle: #34312c; /* soft primary button, selected option card, running job bar */
+  --color-accent-line: #736d64;
+  --color-focus: #f2ece3; /* focus ring (2 px + 2 px offset) */
+
+  /* ---------- status (always with icon + text) ---------- */
+  --color-ok: #72d48a; /* text/icon */
+  --color-ok-subtle: #2a352a;
+  --color-ok-line: #416749;
+  --color-ok-solid: #53be70; /* ✓ step done, «Final video ready», worker online dot */
+  --color-ok-solid-ink: #0c1a0f;
+
+  --color-warn: #fac053; /* sensitive photo, repeated photo, quality tags, «Analyze again» */
+  --color-warn-subtle: #3c3424;
+  --color-warn-line: #826735;
+  --color-warn-solid: #f5ae39; /* ⚠ / 🔁 badges on photos, warning dots in the song map */
+  --color-warn-solid-ink: #1e1406;
+
+  --color-danger: #f87e77; /* «Don't use», «Delete», errors, «will pixelate» */
+  --color-danger-subtle: #3c2b29;
+  --color-danger-line: #814a46;
+  --color-danger-solid: #d03739; /* 🔍 badge on photos, destructive confirm button */
+  --color-danger-solid-ink: #ffffff;
+
+  /* ---------- camera-movement slider zones ---------- */
+  --color-zone-ok: #3d8e53; /* «As far as it goes without losing quality» */
+  --color-zone-warn: #d3b63b; /* «Some quality loss shows» (yellow, not the amber of warnings) */
+  --color-zone-bad: #cb4644; /* «Will pixelate» */
+
+  /* ---------- song sections: quiet, same lightness, always next to their name ---------- */
+  --color-sec-intro: #97918a; /* piedra */
+  --color-sec-verse: #5ca7a7; /* agua */
+  --color-sec-chorus: #c77ea1; /* frambuesa */
+  --color-sec-bridge: #a583b4; /* ciruela */
+  --color-sec-outro: #7090ac; /* anochecer */
+
+  /* ---------- type ---------- */
+  --font-sans: "Instrument Sans Variable", "Instrument Sans", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif; /* titles, lyrics; ≥ 20 px only */
+  --font-hand: "Caveat Variable", "Caveat", cursive; /* only what is written on album prints */
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem; /* 12/16 */
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.25rem; /* 14/20 */
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem; /* 16/24 */
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.625rem; /* 18/26 */
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.625rem; /* 20/26 sans 600 */
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.875rem; /* 24/30 */
+  --text-h1: 1.875rem;
+  --text-h1--line-height: 2.25rem; /* 30/36 */
+  --text-title: 1.625rem;
+  --text-title--line-height: 1.875rem; /* 26/30 serif: project title */
+  --text-lyric: 1.5rem;
+  --text-lyric--line-height: 1.875rem; /* 24/30 serif italic: the lyric line */
+  --text-display: 2.75rem;
+  --text-display--line-height: 3rem; /* 44/48 serif: «Your videos» */
+  --tracking-eyebrow: 0.08em;
+  --tracking-display: -0.01em;
+
+  /* ---------- shape ---------- */
+  --radius-xs: 4px; /* badges on photos, face boxes */
+  --radius-sm: 6px; /* thumbnails (prints, not pills) */
+  --radius-md: 10px; /* buttons, fields, segments, menus items */
+  --radius-lg: 14px; /* cards, popovers, the editor's big image */
+  --radius-xl: 20px; /* dialogs, mobile sheet top */
+
+  /* on a dark UI elevation is mostly the lighter surface; shadows only separate floating layers */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 16px 40px -12px rgb(0 0 0 / 0.7);
+  --shadow-xl: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 28px 64px -16px rgb(0 0 0 / 0.8);
+
+  /* ---------- motion ---------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1); /* things appearing, hover */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* things moving */
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1); /* sheet / panel entering */
+
+  --spacing: 4px; /* p-1 = 4 px … p-4 = 16 px; use the steps 1 2 3 4 5 6 8 10 12 16 */
+}
+
+:root {
+  color-scheme: dark;
+  --duration-fast: 120ms; /* hover, press, toggles */
+  --duration-base: 180ms; /* popovers, chevrons, tile focus */
+  --duration-slow: 280ms; /* sheet, side panel, toasts */
+  --focus-ring: 0 0 0 2px var(--color-canvas), 0 0 0 4px var(--color-focus);
+  --focus-halo: rgb(188 202 255 / 0.22);
+  --scrim-bottom: linear-gradient(to top, rgb(0 0 0 / 0.66), rgb(0 0 0 / 0) 62%);
+  --scrim-top: linear-gradient(to bottom, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0) 60%);
+  --highlight: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --touch: 44px; /* minimum target on coarse pointers */
+  --header-h: 64px;
+}

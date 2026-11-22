@@ -1,0 +1,163 @@
+{
+  "groups": {
+    "photo": "What the photo is like",
+    "lyrics": "What the lyrics say",
+    "project": "The project"
+  },
+  "signals": {
+    "aesthetic": { "name": "Good-looking", "help": "The photo's aesthetic score (light, composition)." },
+    "smile": { "name": "Smiles", "help": "Smiling faces." },
+    "face": { "name": "Clear faces", "help": "Big faces in the photo, and several people together." },
+    "frontal": { "name": "Looking at the camera", "help": "Faces from the front rather than in profile." },
+    "fav": { "name": "Immich favorites", "help": "The ones you starred in Immich." },
+    "eyes_closed": { "name": "Eyes closed", "help": "Pushes them down. “More” pushes them further." },
+    "blurry": { "name": "Blurry", "help": "Shaky or blurry faces. “More” pushes them further down." },
+    "quality": {
+      "name": "Screenshots and documents",
+      "help": "Screenshots, memes, paperwork. “More” pushes them further down."
+    },
+    "lyric": { "name": "Matches the line", "help": "How much the photo looks like what that line says." },
+    "concept": {
+      "name": "Things it names",
+      "help": "The line mentions beach, snow, cake…: photos that show it."
+    },
+    "tag": { "name": "Objects it names", "help": "The photo's tags include something the line names." },
+    "person": { "name": "Who it names", "help": "The line names someone and they're in the photo." },
+    "place": {
+      "name": "The place it names",
+      "help": "The line names the photo's town, province or country."
+    },
+    "month": { "name": "The month it names", "help": "The line names a month: photos from that month." },
+    "season": { "name": "The season it names", "help": "The line names a season: photos from those months." },
+    "theme": { "name": "Matches the theme", "help": "The project's theme (② Photos)." },
+    "album": { "name": "In the project's album", "help": "Photos from the Immich album chosen in ② Photos." },
+    "stranger": {
+      "name": "Only other people",
+      "help": "Photos with only people who aren't the project's. “More” pushes them further down."
+    },
+    "video": { "name": "Videos", "help": "Short videos instead of photos." }
+  },
+  "levels": {
+    "none": "None",
+    "less": "Less",
+    "normal": "Normal",
+    "more": "More",
+    "muchMore": "Much more"
+  },
+  "percentChange": "{{sign}}{{n}}%",
+  "signal": {
+    "learned": "Learned: {{pct}}.",
+    "learnedUnapplied": "Learned: {{pct}} (not applied).",
+    "general": "In general: {{level}}.",
+    "asUsual": "As usual"
+  },
+  "tuning": {
+    "title": "This project's settings",
+    "intro": "Only for this project, on top of the general ones (what's learned and <link>your settings for all</link>). For example, in a video of old photos, less “Blurry”. You'll see it in “Change photo” and when you suggest again.",
+    "resetAll": "All to “As usual”"
+  },
+  "page": {
+    "back": "Your videos",
+    "eyebrow": "Learning",
+    "title": "How it picks the photos",
+    "intro": "What it learns from your changes is <b>how you choose</b>: whether smiles or lyrics weigh more, whether you mind blurry photos. That applies to every project. <b>What the photos are about</b> (summer, snow, beach) belongs to each project: the theme, the dates and “Avoid”, in ② Photos."
+  },
+  "status": {
+    "title": "What it has learned",
+    "few_one": "{{count}} correction: it starts adjusting at 20. Until then, it uses the factory weights.",
+    "few_other": "{{count}} corrections: it starts adjusting at 20. Until then, it uses the factory weights.",
+    "accuracy": "With {{n}} corrections, on ones it hasn't seen, it matches your choice <b>{{learned}}%</b> of the time, versus {{def}}% with the factory weights.",
+    "inUse": "It's in use.",
+    "notInUse": "It's only used if it improves by 5 points or more, so <b>the factory weights are in use for now</b>.",
+    "noData": "Not enough data yet.",
+    "changed": "What changed: {{what}}.",
+    "wouldChange": "What would change: {{what}}.",
+    "more_one": "{{names}} counts more",
+    "more_other": "{{names}} count more",
+    "less_one": "{{names}} counts less",
+    "less_other": "{{names}} count less",
+    "both": "{{more}}; {{less}}",
+    "updated": "Last time: {{date}}. It readjusts on its own after every suggestion.",
+    "learning": "Learning…",
+    "relearn": "Learn again",
+    "startOver": "Start over…",
+    "relearnToast": "Learning again: it takes a couple of minutes"
+  },
+  "resetAll": {
+    "title": "Start over?",
+    "body_one": "The only correction from every project is forgotten and it goes back to the factory weights. Photos pinned so far won't count again; what you correct from now on will. Your manual levels don't change. A copy of what's deleted stays on the server.",
+    "body_other": "The {{count}} corrections from every project are forgotten and it goes back to the factory weights. Photos pinned so far won't count again; what you correct from now on will. Your manual levels don't change. A copy of what's deleted stays on the server.",
+    "confirm": "Start over",
+    "done_one": "Forgot {{count}} correction: starting over",
+    "done_other": "Forgot {{count}} corrections: starting over"
+  },
+  "levelsCard": {
+    "title": "How much each thing counts",
+    "reset": "All to “Normal”",
+    "resetDone": "Everything is back to “Normal”",
+    "intro": "For every project, on top of what's learned. You'll see it in “Change photo” and in the next suggestion; photos already placed don't change. Each project can fine-tune it further in ② Photos."
+  },
+  "projects": {
+    "title": "Projects",
+    "intro": "A test project, or one very different from the rest, may not teach anything.",
+    "deleted": "Deleted project",
+    "corrections_one": "{{count}} correction",
+    "corrections_other": "{{count}} corrections",
+    "accepted_one": "{{count}} shot accepted",
+    "accepted_other": "{{count}} shots accepted",
+    "factory": "uses the factory weights",
+    "ownSettings": "with its own settings",
+    "notTeaching": "Doesn't teach the app",
+    "forget": "Forget",
+    "startOver": "Start over",
+    "learnsFrom": "Learn from it",
+    "learnsFromLabel": "Learn from “{{title}}”",
+    "stop": {
+      "titleDeleted": "Forget what it taught?",
+      "title": "Stop learning from “{{title}}”?",
+      "body_one": "Its only correction is deleted and the app readjusts without it. A copy stays on the server.",
+      "body_other": "Its {{count}} corrections are deleted and the app readjusts without them. A copy stays on the server.",
+      "confirm": "Stop learning",
+      "teachesAgain": "“{{title}}” teaches again",
+      "forgotten": "Forgotten"
+    },
+    "restart": {
+      "title": "Start over with “{{title}}”?",
+      "body_one": "Its only correction is forgotten, along with the photos pinned so far. What you correct in it from now on counts again. A copy stays on the server.",
+      "body_other": "Its {{count}} corrections are forgotten, along with the photos pinned so far. What you correct in it from now on counts again. A copy stays on the server.",
+      "done_one": "Forgot {{count}} correction from “{{title}}”",
+      "done_other": "Forgot {{count}} corrections from “{{title}}”"
+    }
+  },
+  "events": {
+    "title": "Your corrections",
+    "project": "Project",
+    "allProjects": "All projects",
+    "intro": "Every time you change a photo, the app notes “this one over that one”. If any was a test or a mistake, remove it.",
+    "showAccepted": "Also show the shots you left as they were",
+    "none": "None yet.",
+    "removed": "Removed: it no longer counts for learning",
+    "action": {
+      "reject": "Removed",
+      "accept": "Accepted",
+      "change": "Changed"
+    },
+    "source": {
+      "alts": "from the alternatives",
+      "options": "with “Change photo”",
+      "all": "with “See all”",
+      "search": "by searching",
+      "burst": "from the same burst",
+      "immich": "with an Immich link",
+      "swap": "by swapping shots",
+      "pinned": "pinned",
+      "pinAsIs": "pinned as is",
+      "final": "when making the final video"
+    },
+    "deletedProject": "deleted project",
+    "shot": "shot {{n}}",
+    "remove": "Remove this correction",
+    "removeHint": "Remove: it stops counting for learning",
+    "more": "See more ({{n}})"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "title": {
+    "change": "Change photo · Shot {{n}}",
+    "pair": "Second photo · Shot {{n}}"
+  },
+  "done": {
+    "changed": "Shot {{n}}: photo changed",
+    "pair": "Shot {{n}}: second photo set",
+    "auto": "Shot {{n}}: the app picks the second photo"
+  },
+  "sort": {
+    "label": "Sort by",
+    "fit": "Best for this shot",
+    "query": "Closest to the search",
+    "quality": "Best-looking",
+    "near": "Closest in date",
+    "new": "Newest",
+    "old": "Oldest"
+  },
+  "days": {
+    "label": "Dates",
+    "same": "Around the same time",
+    "sameHint": "± 3 wks",
+    "14": "± 2 weeks",
+    "60": "± 2 months",
+    "any": "Any date",
+    "album": "From the album",
+    "project": "Project dates"
+  },
+  "people": {
+    "label": "People",
+    "remove": "Remove {{name}}",
+    "add": "Add",
+    "addPerson": "Add person",
+    "addPlaceholder": "Add a person…",
+    "any": "Photos with any of them.",
+    "none": "No people: photos of anyone.",
+    "everyone": "Everyone",
+    "everyoneLower": "everyone"
+  },
+  "show": {
+    "label": "Show",
+    "hideUsed": "Hide the ones already used",
+    "hideSensitive": "Hide <icon/> sensitive",
+    "onlyFav": "Only <icon/> favorites",
+    "shape": "Shape",
+    "shapeAll": "All",
+    "portrait": "Portrait",
+    "landscape": "Landscape",
+    "type": "Type",
+    "typeAll": "All",
+    "photos": "Photos",
+    "videos": "Videos"
+  },
+  "howMany": {
+    "label": "How many",
+    "fit": "Best matches",
+    "all": "See all",
+    "hint": "“See all” shows every photo from those dates and people, bursts included."
+  },
+  "filters": "Filters",
+  "seePhotos": "See the photos",
+  "search": {
+    "label": "Search or paste an Immich link",
+    "placeholder": "Search (beach, snow, cake…) or paste an Immich link",
+    "placeholderPair": "Paste an Immich link",
+    "openImmich": "Open Immich"
+  },
+  "autoPick": "Let the app choose",
+  "results": {
+    "search": "Results for “{{query}}”",
+    "partners": "From the same moment and the same day",
+    "all": "All",
+    "fit": "Best matches",
+    "count_one": "{{count}} photo",
+    "count_other": "{{count}} photos",
+    "capped": "{{n}} photos (the {{max}} closest)",
+    "hidden_one": "{{count}} hidden by the filters",
+    "hidden_other": "{{count}} hidden by the filters",
+    "more": "Show more"
+  },
+  "loading": {
+    "search": "Searching…",
+    "all": "Loading all the photos…",
+    "fit": "Finding the best fits for the line…"
+  },
+  "empty": {
+    "filtered": "None with those filters.",
+    "none": "Nothing for those dates and people: widen the dates or search."
+  },
+  "card": {
+    "put": "Use the photo from {{date}}",
+    "putWarned": "Use the photo from {{date}}, warning: {{warning}}",
+    "favorite": "Favorite",
+    "usedIn": "in shot {{n}}",
+    "use": "Use",
+    "details": "Photo details",
+    "detailsOf": "Details of the photo from {{date}}",
+    "confirm": {
+      "label": "Photo with a warning",
+      "warning": "Warning: {{warning}}",
+      "ask": "Use it anyway?",
+      "yes": "Use it",
+      "no": "No"
+    }
+  },
+  "burst": {
+    "now": "In the shot now",
+    "title_one": "Same burst · {{count}} photo",
+    "title_other": "Same burst · {{count}} photos",
+    "hint": "— same moment: try another expression",
+    "photo": "Photo {{n}} of the burst",
+    "isSet": "in use",
+    "isBest": "the best one",
+    "set": "In use",
+    "best": "★ Best"
+  }
+}

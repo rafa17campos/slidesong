@@ -1,0 +1,69 @@
+{
+  "app": {
+    "name": "Slidesong"
+  },
+  "actions": {
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "done": "Hecho",
+    "delete": "Borrar",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "retry": "Reintentar",
+    "download": "Descargar",
+    "seeMore": "Ver más"
+  },
+  "loading": "Cargando…",
+  "steps": {
+    "song": "Canción",
+    "photos": "Fotos",
+    "storyboard": "Montaje",
+    "video": "Vídeo"
+  },
+  "toast": {
+    "close": "Cerrar aviso"
+  },
+  "language": {
+    "label": "Idioma",
+    "name": "Español",
+    "locale": "es-ES"
+  },
+  "errors": {
+    "offline": "Sin conexión con Slidesong",
+    "server": "Error en el servidor",
+    "status": "Error {{status}}",
+    "tooLong": "{{what}} es demasiado largo (máximo {{max}})",
+    "tooMany": "{{what}} tiene demasiados elementos",
+    "badFormat": "{{what}} no tiene un formato válido",
+    "invalid": "{{what}} no es válido"
+  },
+  "fields": {
+    "title": "El título",
+    "title_overlay": "El texto al empezar",
+    "theme": "El tema",
+    "lyrics": "La letra",
+    "date_from": "La fecha «desde»",
+    "date_to": "La fecha «hasta»",
+    "people": "La lista de personas",
+    "other": "Un valor"
+  },
+  "shortcuts": {
+    "prevNext": "Plano anterior / siguiente",
+    "open": "Abrir el plano",
+    "close": "Cerrar",
+    "change": "Cambiar la foto",
+    "reject": "No usar esta foto",
+    "pin": "Fijar / soltar",
+    "play": "Ver el plano con música",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "help": "Ver estos atajos",
+    "keyEnter": "Intro",
+    "keyRedo": "Ctrl Mayús Z"
+  },
+  "undone": "Deshecho: {{what}}",
+  "footer": {
+    "free": "Slidesong es software libre con licencia GNU AGPL v3.",
+    "source": "Código fuente"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "transitions": {
+    "cut": "Cut",
+    "fade": "Fade",
+    "push": "Push",
+    "slide": "Slide over",
+    "wipe": "Wipe",
+    "whip": "Whip pan",
+    "iris": "Iris",
+    "blur": "Blur",
+    "light": "Warm light",
+    "dipwhite": "Dip to white",
+    "dipblack": "Dip to black",
+    "flash": "Flash",
+    "zoom": "Zoom",
+    "diptych": "Diptych"
+  },
+  "looks": {
+    "in": "Zooming in",
+    "out": "Zooming out",
+    "pan_lr": "Pan →",
+    "pan_rl": "Pan ←",
+    "tilt": "Vertical pan",
+    "contain_in": "Whole photo (zooming in)",
+    "contain_out": "Whole photo (zooming out)",
+    "whole_to_face": "Whole photo to face",
+    "face_to_whole": "Face to whole photo",
+    "polaroid": "Album photo",
+    "polaroid_pair": "Two album photos",
+    "diptych": "Diptych",
+    "diptych_next": "Diptych with the next one",
+    "diptych_other": "Diptych with another photo",
+    "single": "No second photo",
+    "video": "Video"
+  },
+  "auto": "Automatic: {{name}}",
+  "pairFrom": {
+    "chosen": "chosen by you",
+    "day": "from the same day",
+    "burst": "from the same moment"
+  },
+  "mood": {
+    "low": "low",
+    "mid": "medium",
+    "high": "high"
+  },
+  "energy": "{{level}} energy",
+  "sections": {
+    "intro": "Intro",
+    "verse": "Verse",
+    "prechorus": "Pre-chorus",
+    "chorus": "Chorus",
+    "bridge": "Bridge",
+    "outro": "Outro",
+    "interlude": "Instrumental",
+    "song": "Song"
+  },
+  "jobs": {
+    "analyze": "Analyzing the song",
+    "suggest": "Choosing photos",
+    "render": "Making the video",
+    "export": "Preparing the editable project"
+  },
+  "warnings": {
+    "empty": "This shot has no photo",
+    "sensitive": "Sensitive photo: {{tag}}",
+    "repeat": {
+      "same": "The same photo as shot {{n}}",
+      "dup": "Duplicate of shot {{n}}",
+      "burst": "From the same burst as shot {{n}}",
+      "similar": "Very similar to shot {{n}}"
+    },
+    "pixelate": "The movement will pixelate"
+  }
+}

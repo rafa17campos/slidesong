@@ -1,0 +1,69 @@
+{
+  "app": {
+    "name": "Slidesong"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "done": "Done",
+    "delete": "Delete",
+    "undo": "Undo",
+    "redo": "Redo",
+    "retry": "Retry",
+    "download": "Download",
+    "seeMore": "See more"
+  },
+  "loading": "Loading…",
+  "steps": {
+    "song": "Song",
+    "photos": "Photos",
+    "storyboard": "Storyboard",
+    "video": "Video"
+  },
+  "toast": {
+    "close": "Close notice"
+  },
+  "language": {
+    "label": "Language",
+    "name": "English",
+    "locale": "en-US"
+  },
+  "errors": {
+    "offline": "No connection to Slidesong",
+    "server": "Server error",
+    "status": "Error {{status}}",
+    "tooLong": "{{what}} is too long (max. {{max}})",
+    "tooMany": "{{what}} has too many items",
+    "badFormat": "{{what}} is not in a valid format",
+    "invalid": "{{what}} is not valid"
+  },
+  "fields": {
+    "title": "The title",
+    "title_overlay": "The opening text",
+    "theme": "The theme",
+    "lyrics": "The lyrics",
+    "date_from": "The “from” date",
+    "date_to": "The “to” date",
+    "people": "The list of people",
+    "other": "A value"
+  },
+  "shortcuts": {
+    "prevNext": "Previous / next shot",
+    "open": "Open the shot",
+    "close": "Close",
+    "change": "Change the photo",
+    "reject": "Don't use this photo",
+    "pin": "Pin / unpin",
+    "play": "Play the shot with music",
+    "undo": "Undo",
+    "redo": "Redo",
+    "help": "Show these shortcuts",
+    "keyEnter": "Enter",
+    "keyRedo": "Ctrl Shift Z"
+  },
+  "undone": "Undone: {{what}}",
+  "footer": {
+    "free": "Slidesong is free software under the GNU AGPL v3.",
+    "source": "Source code"
+  }
+}

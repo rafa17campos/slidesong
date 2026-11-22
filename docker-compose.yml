@@ -1,0 +1,17 @@
+# Slidesong: Immich photos + songs -> videos. Meant for a home network (no login yet).
+# Immich via the API (read-only key) + smart_search vectors through a read-only role (that table only).
+services:
+  slidesong:
+    build: .
+    image: slidesong:local
+    container_name: slidesong
+    restart: unless-stopped
+    user: "1000:1000"
+    network_mode: host          # reach Immich (API, Postgres) and its ML service on the host network
+    env_file: secrets.env       # IMMICH_*, worker URL/token (mode 600, not in git)
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ./data:/data
+    logging:
+      driver: local               # rotated (20 MB × 5 by default): the json-file default grows without limit

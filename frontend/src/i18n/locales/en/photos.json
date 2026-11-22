@@ -1,0 +1,190 @@
+{
+  "who": {
+    "title": "Which photos",
+    "label": "Who's in them",
+    "hint": "Photos with any of them. Photos of you with them count too."
+  },
+  "people": {
+    "remove": "Remove {{name}}",
+    "none": "No one chosen: every photo from those dates.",
+    "add": "Add a person",
+    "placeholder": "Add a person…",
+    "placeholderCount": "Add a person… ({{n}} in Immich)",
+    "top": "Most frequent:"
+  },
+  "dates": {
+    "label": "When",
+    "from": "From",
+    "to": "To",
+    "shortcuts": {
+      "summer": "This summer",
+      "sixMonths": "Last 6 months",
+      "year": "All of {{year}}"
+    }
+  },
+  "theme": {
+    "label": "Theme",
+    "hint": "Optional. Photos that match come first.",
+    "placeholder": "beach, Christmas, birthday…"
+  },
+  "avoid": {
+    "label": "Avoid",
+    "hint": "Optional. Photos that look like this drop way down.",
+    "placeholder": "beach, pool…"
+  },
+  "album": {
+    "label": "Immich album",
+    "hint": "Optional. Its photos get priority.",
+    "tip": "Tip: in Immich, select photos and choose “Add to album”.",
+    "none": "— none —",
+    "option_one": "{{name}} ({{count}} photo)",
+    "option_other": "{{name}} ({{count}} photos)",
+    "chosen": "(chosen album)",
+    "refresh": "Refresh the album list"
+  },
+  "sensitive": {
+    "title": "Sensitive photos",
+    "inVideo_one": "{{count}} in the video",
+    "inVideo_other": "{{count}} in the video",
+    "sub": "Shirtless, in swimwear, in diapers or in the bath, going by the AI tags. They're always marked with <icon/>.",
+    "show": {
+      "title": "Suggest with a warning",
+      "desc": "They can show up; each one gets a warning so you can review it.",
+      "tag": "Default"
+    },
+    "avoid": {
+      "title": "Avoid them",
+      "desc": "Only if there's nothing better for that moment of the song."
+    },
+    "never": {
+      "title": "Never suggest them",
+      "desc": "Not in suggestions or when changing a photo (you can still add them by hand)."
+    }
+  },
+  "how": {
+    "title": "Storytelling"
+  },
+  "pace": {
+    "label": "Pace",
+    "slow": "Slow",
+    "normal": "Normal",
+    "fast": "Fast",
+    "desc": {
+      "slow": "Short lines share a photo.",
+      "normal": "About one photo per line.",
+      "fast": "Two photos per line."
+    },
+    "more": "It follows the song: the chorus goes a bit faster; intro, bridge and ending, slower. <b>Changing it redoes the shots.</b>",
+    "confirm": {
+      "title": "Change the pace?",
+      "body": "This redoes the shots. Photos (pinned ones too) move to the new shot at the same moment; if two pinned photos land on the same shot, one of them stays. Empty shots get filled when you suggest again. You can undo it.",
+      "confirm": "Change the pace"
+    }
+  },
+  "order": {
+    "label": "Photo order",
+    "aria": "Order",
+    "flex": "By date, flexible",
+    "strict": "Strict",
+    "free": "Free",
+    "flexLead": "It can move a photo earlier or later by up to",
+    "margin": "Date margin",
+    "days3": "± 3 days",
+    "week1": "± 1 week",
+    "weeks2": "± 2 weeks",
+    "month1": "± 1 month",
+    "strictDesc": "Photos always go in date order.",
+    "freeDesc": "No date order: whichever photo fits each line best."
+  },
+  "motion": {
+    "label": "Camera movement",
+    "hint": "You can change each shot in the Storyboard step.",
+    "aria": "Movement",
+    "calm": "Calm",
+    "normal": "Normal",
+    "lively": "Lively",
+    "desc": "Lively: more whip pans and diptychs. Calm: gentle zooms, no whip pans."
+  },
+  "videos": {
+    "label": "Videos",
+    "off": "No videos",
+    "some": "Some",
+    "many": "Plenty",
+    "desc": "Some: ≈ 15% of the shots are video clips. Plenty: ≈ 35%."
+  },
+  "opening": {
+    "label": "Opening text",
+    "hint": "Shown over the first shot.",
+    "placeholder": "No text (e.g. “Summer 2026”)"
+  },
+  "subtitles": {
+    "label": "Subtitles",
+    "hint": "The lyrics burned into the video.",
+    "off": "Off",
+    "all": "All",
+    "some": "Chosen",
+    "desc": {
+      "some_one": "Pick them with the subtitle icon on each shot or in the lyrics. Now: {{count}} line.",
+      "some_other": "Pick them with the subtitle icon on each shot or in the lyrics. Now: {{count}} lines.",
+      "all": "Every line shows on screen, in sync with the song.",
+      "off": "No lyrics on the video."
+    }
+  },
+  "learning": {
+    "label": "Learning",
+    "hint": "What the app learns from your changes.",
+    "on": "Use what it learned",
+    "off": "From scratch",
+    "desc": "From scratch: the factory weights, without what it learned from your corrections.",
+    "tuning": "This project's settings",
+    "seeLearned": "See what it learned"
+  },
+  "summary": {
+    "title": "In the video",
+    "withPhoto": "Shots with a photo",
+    "pinned": "Pinned by you",
+    "videos": "Videos",
+    "warned": "With a warning",
+    "changed": "You changed <b>{{list}}</b> since the last suggestion: changes apply when you suggest again."
+  },
+  "changed": {
+    "people": "Who's in them",
+    "dates": "When",
+    "theme": "Theme",
+    "avoid": "Avoid",
+    "album": "Album",
+    "sensitive": "Sensitive photos",
+    "order": "Order",
+    "videos": "Videos",
+    "learning": "Learning",
+    "tuning": "This project's settings"
+  },
+  "suggest": {
+    "again": "Suggest again",
+    "first": "Suggest photos",
+    "keepsPinned_one": "Keeps your pinned photo. The rest may change.",
+    "keepsPinned_other": "Keeps your {{count}} pinned photos. The rest may change.",
+    "mayChangeAll": "Any of them may change: pin the ones you want to keep.",
+    "firstHint": "Picks a photo for each shot. Then you review them in the Storyboard step.",
+    "needsSong": "First analyze the song in the <link>Song</link> step."
+  },
+  "excluded": {
+    "title": "Removed from this video",
+    "restored": "Restored: it can show up in suggestions again",
+    "restore": "Restore this photo",
+    "restoreShort": "Restore",
+    "hint": "“Don't use” puts them here. Tap one to restore it."
+  },
+  "pool": {
+    "title": "Candidate photos",
+    "counting": "Counting the photos for these filters and how many are analyzed…",
+    "total_one": "<b>{{count, number}}</b> photo or video with these filters",
+    "total_other": "<b>{{count, number}}</b> photos and videos with these filters",
+    "analyzed": "Analyzed on the GPU",
+    "progress": "{{done, number}} of {{total, number}}",
+    "offline": "<b>{{name}} is off: {{n, number}} not analyzed.</b> Those photos may show up without the sensitive photo warning, and their quality (eyes, smile, focus) doesn't count when choosing. Turn it on and they'll be analyzed on their own.",
+    "note": "Quality, faces and tags (that's where the sensitive photo warnings come from).",
+    "analyzingNow": "Analyzing now.",
+    "onSuggest": "Anything left gets done when you suggest."
+  }
+}

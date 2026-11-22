@@ -1,0 +1,229 @@
+{
+  "board": {
+    "label": "Montaje",
+    "noShots": "Todavía no hay planos: analiza la canción en el paso «Canción».",
+    "reviewWarnings": "Revisar avisos",
+    "selected": "Plano seleccionado",
+    "editShot": "Editar el plano {{n}}",
+    "counter": "Aviso {{n}} de {{total}}",
+    "shots_one": "{{count}} plano",
+    "shots_other": "{{count}} planos"
+  },
+  "filters": {
+    "label": "Mostrar",
+    "all": "Todos",
+    "warnings": "Con aviso",
+    "pinned": "Fijados",
+    "videos": "Vídeos",
+    "subs": "Con subtítulo"
+  },
+  "empty": {
+    "all": "No hay planos.",
+    "warnings": "Ningún plano con aviso.",
+    "pinned": "Ningún plano fijado.",
+    "videos": "Ningún plano es un vídeo.",
+    "subs": "Ningún plano con subtítulo."
+  },
+  "size": {
+    "label": "Tamaño",
+    "cards": "Tarjetas con letra",
+    "dense": "Solo fotos, compacto"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "button": "Atajos de teclado (?)"
+  },
+  "swap": {
+    "bar": "Toca el plano con el que intercambiar la foto del plano {{n}}",
+    "done": "Intercambiadas las fotos de los planos {{a}} y {{b}}"
+  },
+  "toasts": {
+    "rejected": "Plano {{n}}: foto quitada de este vídeo",
+    "burst": "Plano {{n}}: otra foto de la ráfaga",
+    "immich": "Plano {{n}}: foto de Immich puesta",
+    "noLink": "En el portapapeles no hay un enlace de una foto de Immich",
+    "noClipboard": "No puedo leer el portapapeles: pega el enlace en «Cambiar foto»",
+    "undone": "Deshecho: {{what}}",
+    "redone": "Rehecho: {{what}}"
+  },
+  "shot": {
+    "title": "Plano {{n}}",
+    "heading": "Plano {{n}} <m>de {{total}}</m>",
+    "prev": "Plano anterior",
+    "next": "Plano siguiente"
+  },
+  "editor": {
+    "play": "Ver plano con música",
+    "photoDetails": "Ficha de la foto",
+    "instrumental": "♪ Instrumental",
+    "lineContinues": "↳ sigue la frase",
+    "subtitle": "Subtítulo",
+    "subtitleHere": "Subtítulo en este plano",
+    "changePhoto": "Cambiar foto",
+    "change": "Cambiar",
+    "pin": "Fijar",
+    "pinned": "Fijada",
+    "pinPhoto": "Fijar esta foto",
+    "unpinPhoto": "Soltar: que la app pueda cambiarla",
+    "pinTitle": "Fijar (F)",
+    "pinnedTitle": "Fijada (F)",
+    "swap": "Intercambiar con otro plano",
+    "paste": "Pegar enlace de Immich",
+    "reject": "No usar",
+    "rejectTitle": "Quitarla de este vídeo y poner otra (X)",
+    "more": "Más",
+    "whyTitle": "Por qué esta foto",
+    "metaVideo": "vídeo · {{s}} s",
+    "metaPortrait": "foto · vertical",
+    "metaLandscape": "foto · horizontal",
+    "readOnlyFrozen": "Proyecto bloqueado: aquí solo se mira. Para cambiar algo, crea una versión nueva.",
+    "readOnlyAnalyze": "Mientras se analiza la canción no se puede cambiar nada.",
+    "readOnlySuggest": "Mientras se sugieren fotos no se puede cambiar nada.",
+    "undo": "Deshacer: {{what}}",
+    "redo": "Rehacer: {{what}}",
+    "nothingToUndo": "Nada que deshacer",
+    "nothingToRedo": "Nada que rehacer"
+  },
+  "callout": {
+    "reviewed": "Revisado: la fijaste.",
+    "goto": "Ir al {{n}}",
+    "pixelateHint": "La foto no tiene resolución para tanto movimiento.",
+    "setAuto": "Poner auto",
+    "sensitiveHint": "Revísala antes de enseñar el vídeo.",
+    "addPhoto": "Poner foto",
+    "change": "Cambiar"
+  },
+  "burst": {
+    "title_one": "Misma ráfaga · {{count}} foto",
+    "title_other": "Misma ráfaga · {{count}} fotos",
+    "photo": "Foto {{n}} de la ráfaga",
+    "photoInUse": "Foto {{n}} de la ráfaga, puesta",
+    "photoBest": "Foto {{n}} de la ráfaga, la mejor según la app",
+    "photoInUseBest": "Foto {{n}} de la ráfaga, puesta, la mejor según la app",
+    "inUse": "Puesta",
+    "best": "★ Mejor"
+  },
+  "camera": {
+    "title": "Cámara",
+    "sharesWith": "Comparte pantalla con el plano {{n}} (díptico).",
+    "split": "Separar",
+    "video": "Es un vídeo: se usa su trozo central, sin sonido.",
+    "framing": "Encuadre",
+    "framingLabel": "Encuadre de este plano",
+    "auto": "Automático",
+    "secondPhoto": "Segunda foto",
+    "pairFrom": "Otra foto {{from}}",
+    "secondPhotoDetails": "Ficha de la segunda foto",
+    "changeSecond": "Cambiarla",
+    "removeSecond": "Quitar la segunda foto",
+    "captionFirst": "Texto escrito en la primera foto",
+    "captionSecond": "Texto escrito en la segunda foto",
+    "noText": "sin texto",
+    "autoBadge": "auto",
+    "backToAutoText": "Volver al texto automático"
+  },
+  "move": {
+    "title": "Cuánto se mueve",
+    "auto": "auto",
+    "label": "Cantidad de movimiento",
+    "still": "quieta",
+    "red": "Se va a pixelar",
+    "yellow": "Se nota algo de pérdida",
+    "autoMax": "Auto: lo máximo sin perder calidad",
+    "ok": "Sin pérdida"
+  },
+  "transition": {
+    "title": "Paso al plano {{n}}",
+    "diptychNext": "⇉ Díptico con el siguiente",
+    "label": "Transición al plano siguiente",
+    "beats_one": "{{count}} tiempo",
+    "beats_other": "{{count}} tiempos"
+  },
+  "snippet": {
+    "failed": "No se pudo generar: {{error}}",
+    "making": "Generando unos segundos de vídeo con su música…"
+  },
+  "tile": {
+    "shot": "Plano {{n}}, {{time}}",
+    "hasWarnings": "tiene avisos",
+    "pinned": "fijada",
+    "noPhoto": "sin foto",
+    "reviewed": "{{text}} (revisado: la fijaste)",
+    "pinnedTitle": "Fijada",
+    "sharesWith": "Comparte pantalla con el plano {{n}}",
+    "instrumental": "♪ instrumental",
+    "withSubtitle": "con subtítulo",
+    "continues": "↳ sigue: "
+  },
+  "songMap": {
+    "label": "Mapa de la canción: toca una parte para ir a sus planos",
+    "warning": "Aviso en el plano {{n}}"
+  },
+  "sheet": {
+    "title": "Ficha de la foto",
+    "shot": "· plano {{n}}",
+    "ref": "foto {{id}} · proyecto {{project}}",
+    "refShot": "foto {{id}} · proyecto {{project}} · plano {{n}}",
+    "copied": "Copiado: pégalo en tu chat con Claude, con tu pregunta",
+    "copyFailed": "No se pudo copiar: selecciónalo y cópialo a mano",
+    "faces": "Caras",
+    "landscape": "horizontal",
+    "portrait": "vertical",
+    "openImmich": "Abrir en Immich",
+    "whyHere": "Por qué está en este plano",
+    "analyzeFailed": "No se pudo analizar: {{error}}",
+    "analyzing": "Analizando…",
+    "fit": {
+      "title": "Encaje con la frase",
+      "local": "El traductor la entiende como <i>«{{english}}»</i>.",
+      "localVisual": "El traductor la entiende como <i>«{{english}}»</i> y busca <b>{{visual}}</b>.",
+      "claude": "Claude la entiende como <i>«{{english}}»</i>.",
+      "claudeVisual": "Claude la entiende como <i>«{{english}}»</i> y busca <b>{{visual}}</b>.",
+      "outOf": "de 100",
+      "better": "Encaja mejor que el {{pct}} % de las fotos candidatas para esta frase."
+    },
+    "data": {
+      "title": "Datos",
+      "date": "Fecha",
+      "place": "Lugar",
+      "noPlace": "sin ubicación",
+      "nearby": "Cerca de",
+      "people": "Personas",
+      "noName": "sin nombre",
+      "noFaces": "ninguna cara detectada",
+      "camera": "Cámara",
+      "file": "Archivo",
+      "favorite": "favorita"
+    },
+    "gpu": {
+      "title": "Análisis de la GPU",
+      "aesthetic": "Estética",
+      "outOf": "de 10",
+      "typical": "Tus fotos suelen dar entre 4 y 6,5.",
+      "eyesClosed": "cerrados",
+      "eyesOpen": "abiertos",
+      "frontal": "mira a cámara",
+      "side": "de lado",
+      "focusSmall": "cara pequeña para juzgar el enfoque",
+      "blurry": "desenfocada ({{v}})",
+      "soft": "algo blanda ({{v}})",
+      "sharp": "enfocada ({{v}})",
+      "noFaces": "Sin caras analizables.",
+      "notYet": "Aún sin analizar con la GPU (se hace al sugerir, con el PC de la GPU encendido)."
+    },
+    "modelSees": "Lo que ve el modelo",
+    "ask": {
+      "title": "Preguntarle a Claude",
+      "hint": "Copia esto y pégalo en tu chat con Claude, con tu pregunta:",
+      "copy": "Copiar"
+    },
+    "video": {
+      "usedChosen": "Trozo usado: <b>{{from}} – {{to}} s</b> ({{len}} s) · elegido por ti",
+      "usedCenter": "Trozo usado: <b>{{from}} – {{to}} s</b> ({{len}} s) · centro del vídeo",
+      "play": "Ver el trozo",
+      "startHere": "Empezar aquí ({{t}} s)",
+      "backToCenter": "Volver al centro",
+      "note": "Un vídeo: en el montaje se usa un trozo, sin sonido."
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "projectTitle": "Título del proyecto",
+  "kpi": {
+    "duration": "Duración",
+    "bpm": "BPM",
+    "lines": "Frases",
+    "shots": "Planos"
+  },
+  "reanalyze": {
+    "title": "Volver a analizar",
+    "hint": "Solo si has cambiado la letra o el MP3. Rehace los planos: las fotos pasan a los planos nuevos del mismo momento y se borra el historial de deshacer (≈ 2 min).",
+    "button": "Volver a analizar"
+  },
+  "analyze": {
+    "title": "Analizar la canción",
+    "hint": "Detecta el ritmo y las partes, sincroniza la letra y la entiende para buscar fotos (≈ 2 min).",
+    "button": "Analizar"
+  },
+  "structure": {
+    "title": "Estructura",
+    "hint": "la ve la app para elegir ritmo y transiciones",
+    "height": "· altura = energía"
+  },
+  "lyrics": {
+    "title": "Letra",
+    "view": "Vista de la letra",
+    "synced": "Sincronizada",
+    "edit": "Editar texto",
+    "pasteHint": "Pega la letra, una frase por línea. Las etiquetas de Suno como [Chorus] marcan las partes de la canción.",
+    "reanalyzeHint": " Si la cambias, vuelve a analizar para que se sincronice.",
+    "placeholder": "Pega aquí la letra",
+    "syncedHint": "Cada frase con su momento, cómo la entiende Claude y qué foto la ilustraría.",
+    "subHint": " Toca el icono de subtítulo para que la frase salga escrita en el vídeo.",
+    "sub": "Subtítulo en «{{line}}»",
+    "shots_one": "plano {{list}}",
+    "shots_other": "planos {{list}}"
+  },
+  "file": {
+    "confirm": {
+      "title": "¿Cambiar la canción?",
+      "body": "Habrá que volver a analizarla. Las fotos elegidas (y las fijadas) pasan a los planos nuevos que caigan en el mismo momento; el historial de deshacer se pierde.",
+      "confirm": "Cambiar la canción"
+    },
+    "uploaded": "Canción subida: ahora, analízala",
+    "none": "Aún no hay canción",
+    "formats": "MP3 de Suno u otro (también WAV, M4A, OGG, FLAC)",
+    "uploading": "Subiendo…",
+    "change": "Cambiar MP3",
+    "upload": "Subir MP3"
+  },
+  "language": {
+    "label": "Idioma",
+    "auto": "Automático",
+    "autoDetected": "Automático ({{name}})",
+    "hint": "Para leer la letra: al sincronizarla, Claude y las palabras que busca en las fotos.",
+    "hintAnalyzed": "Si lo cambias, vuelve a analizar la canción para que se aplique."
+  }
+}

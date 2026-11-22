@@ -1,0 +1,75 @@
+{
+  "transitions": {
+    "cut": "Corte",
+    "fade": "Fundido",
+    "push": "Empuje",
+    "slide": "Deslizar encima",
+    "wipe": "Cortinilla",
+    "whip": "Barrido rápido",
+    "iris": "Círculo",
+    "blur": "Desenfoque",
+    "light": "Luz cálida",
+    "dipwhite": "Fundido a blanco",
+    "dipblack": "Fundido a negro",
+    "flash": "Destello",
+    "zoom": "Zoom",
+    "diptych": "Díptico"
+  },
+  "looks": {
+    "in": "Acercándose",
+    "out": "Alejándose",
+    "pan_lr": "Barrido →",
+    "pan_rl": "Barrido ←",
+    "tilt": "Barrido vertical",
+    "contain_in": "Foto entera (acercándose)",
+    "contain_out": "Foto entera (alejándose)",
+    "whole_to_face": "De entera a la cara",
+    "face_to_whole": "De la cara a entera",
+    "polaroid": "Foto de álbum",
+    "polaroid_pair": "Dos fotos de álbum",
+    "diptych": "Díptico",
+    "diptych_next": "Díptico con la siguiente",
+    "diptych_other": "Díptico con otra foto",
+    "single": "Sin segunda foto",
+    "video": "Vídeo"
+  },
+  "auto": "Automático: {{name}}",
+  "pairFrom": {
+    "chosen": "elegida por ti",
+    "day": "del mismo día",
+    "burst": "del mismo momento"
+  },
+  "mood": {
+    "low": "baja",
+    "mid": "media",
+    "high": "alta"
+  },
+  "energy": "energía {{level}}",
+  "sections": {
+    "intro": "Intro",
+    "verse": "Estrofa",
+    "prechorus": "Pre-estribillo",
+    "chorus": "Estribillo",
+    "bridge": "Puente",
+    "outro": "Final",
+    "interlude": "Instrumental",
+    "song": "Canción"
+  },
+  "jobs": {
+    "analyze": "Analizando la canción",
+    "suggest": "Eligiendo fotos",
+    "render": "Montando el vídeo",
+    "export": "Preparando el proyecto editable"
+  },
+  "warnings": {
+    "empty": "Este plano no tiene foto",
+    "sensitive": "Foto sensible: {{tag}}",
+    "repeat": {
+      "same": "La misma foto que el plano {{n}}",
+      "dup": "Duplicada del plano {{n}}",
+      "burst": "De la misma ráfaga que el plano {{n}}",
+      "similar": "Muy parecida al plano {{n}}"
+    },
+    "pixelate": "El movimiento pixelará"
+  }
+}

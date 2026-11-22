@@ -1,0 +1,7 @@
+{
+  "kind": "scorer",
+  "name": "aesthetic-v2.5",
+  "version": 2,
+  "script": "score.py",
+  "face_focus": { "blurry": 1.6, "soft": 1.8 }
+}

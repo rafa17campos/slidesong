@@ -1,0 +1,190 @@
+{
+  "who": {
+    "title": "Qué fotos",
+    "label": "Quién sale",
+    "hint": "Fotos donde aparezca cualquiera de ellos. Las fotos en las que salís con ellos también entran."
+  },
+  "people": {
+    "remove": "Quitar a {{name}}",
+    "none": "Nadie elegido: todas las fotos de esas fechas.",
+    "add": "Añadir persona",
+    "placeholder": "Añadir persona…",
+    "placeholderCount": "Añadir persona… ({{n}} en Immich)",
+    "top": "Las que más salen:"
+  },
+  "dates": {
+    "label": "Cuándo",
+    "from": "Desde",
+    "to": "Hasta",
+    "shortcuts": {
+      "summer": "Este verano",
+      "sixMonths": "Últimos 6 meses",
+      "year": "Todo {{year}}"
+    }
+  },
+  "theme": {
+    "label": "Tema",
+    "hint": "Opcional. Da prioridad a fotos que encajen.",
+    "placeholder": "playa, navidad, cumpleaños…"
+  },
+  "avoid": {
+    "label": "Evitar",
+    "hint": "Opcional. Fotos que se parezcan a esto bajan mucho.",
+    "placeholder": "playa, piscina…"
+  },
+  "album": {
+    "label": "Álbum de Immich",
+    "hint": "Opcional. Una bandeja: sus fotos tienen prioridad.",
+    "tip": "Truco: en Immich selecciona fotos y «Añadir al álbum».",
+    "none": "— ninguno —",
+    "option_one": "{{name}} ({{count}} foto)",
+    "option_other": "{{name}} ({{count}} fotos)",
+    "chosen": "(álbum elegido)",
+    "refresh": "Actualizar la lista de álbumes"
+  },
+  "sensitive": {
+    "title": "Fotos sensibles",
+    "inVideo_one": "{{count}} en el vídeo",
+    "inVideo_other": "{{count}} en el vídeo",
+    "sub": "Sin camiseta, en bañador, en pañal o en el baño, según las etiquetas de la IA. Siempre se marcan con <icon/>.",
+    "show": {
+      "title": "Proponer y avisar",
+      "desc": "Pueden salir; cada una lleva su aviso para que la revises.",
+      "tag": "Por defecto"
+    },
+    "avoid": {
+      "title": "Evitarlas",
+      "desc": "Solo si no hay nada mejor para ese momento de la canción."
+    },
+    "never": {
+      "title": "No proponerlas nunca",
+      "desc": "Ni en sugerencias ni al cambiar foto (puedes ponerlas a mano)."
+    }
+  },
+  "how": {
+    "title": "Cómo se cuenta"
+  },
+  "pace": {
+    "label": "Ritmo",
+    "slow": "Pausado",
+    "normal": "Normal",
+    "fast": "Rápido",
+    "desc": {
+      "slow": "Frases cortas comparten foto.",
+      "normal": "Una foto por frase, más o menos.",
+      "fast": "Dos fotos por frase."
+    },
+    "more": "Sigue a la canción: el estribillo va algo más rápido; intro, puente y final, más pausados. <b>Cambiarlo rehace los planos.</b>",
+    "confirm": {
+      "title": "¿Cambiar el ritmo?",
+      "body": "Rehace los planos. Las fotos (y las fijadas) pasan al plano nuevo que cae en el mismo momento; si dos fijadas caen en el mismo, se queda una. Los planos vacíos se rellenan al volver a sugerir. Se puede deshacer.",
+      "confirm": "Cambiar el ritmo"
+    }
+  },
+  "order": {
+    "label": "Orden de las fotos",
+    "aria": "Orden",
+    "flex": "Por fecha, flexible",
+    "strict": "Estricto",
+    "free": "Libre",
+    "flexLead": "Puede adelantar o atrasar una foto hasta",
+    "margin": "Margen de fechas",
+    "days3": "± 3 días",
+    "week1": "± 1 semana",
+    "weeks2": "± 2 semanas",
+    "month1": "± 1 mes",
+    "strictDesc": "Las fotos van siempre en orden de fecha.",
+    "freeDesc": "Sin orden de fechas: la que mejor encaje con cada frase."
+  },
+  "motion": {
+    "label": "Movimiento de cámara",
+    "hint": "Cada plano se puede cambiar en Montaje.",
+    "aria": "Movimiento",
+    "calm": "Tranquilo",
+    "normal": "Normal",
+    "lively": "Dinámico",
+    "desc": "Dinámico: más barridos y dípticos. Tranquilo: zooms suaves, sin barridos."
+  },
+  "videos": {
+    "label": "Vídeos",
+    "off": "Sin vídeos",
+    "some": "Algunos",
+    "many": "Bastantes",
+    "desc": "Algunos: ≈ 15 % de los planos son clips de vídeo. Bastantes: ≈ 35 %."
+  },
+  "opening": {
+    "label": "Texto al empezar",
+    "hint": "Sale sobre el primer plano.",
+    "placeholder": "Sin texto (p. ej.: «Verano 2026»)"
+  },
+  "subtitles": {
+    "label": "Subtítulos",
+    "hint": "La letra grabada en el vídeo.",
+    "off": "No",
+    "all": "Todas",
+    "some": "Elegidas",
+    "desc": {
+      "some_one": "Elígelas con el icono de subtítulo en cada plano o en la letra. Ahora: {{count}} frase.",
+      "some_other": "Elígelas con el icono de subtítulo en cada plano o en la letra. Ahora: {{count}} frases.",
+      "all": "Todas las frases salen escritas, sincronizadas con la canción.",
+      "off": "Sin letra escrita en el vídeo."
+    }
+  },
+  "learning": {
+    "label": "Aprendizaje",
+    "hint": "Lo que la app aprende de tus cambios.",
+    "on": "Usar lo aprendido",
+    "off": "Desde cero",
+    "desc": "Desde cero: los pesos de fábrica, sin lo aprendido de tus correcciones.",
+    "tuning": "Ajustes de este proyecto",
+    "seeLearned": "Ver lo aprendido"
+  },
+  "summary": {
+    "title": "En el vídeo",
+    "withPhoto": "Planos con foto",
+    "pinned": "Fijadas por ti",
+    "videos": "Vídeos",
+    "warned": "Con aviso",
+    "changed": "Has cambiado <b>{{list}}</b> desde la última sugerencia: se aplica al volver a sugerir."
+  },
+  "changed": {
+    "people": "Quién sale",
+    "dates": "Cuándo",
+    "theme": "Tema",
+    "avoid": "Evitar",
+    "album": "Álbum",
+    "sensitive": "Fotos sensibles",
+    "order": "Orden",
+    "videos": "Vídeos",
+    "learning": "Aprendizaje",
+    "tuning": "Ajustes de este proyecto"
+  },
+  "suggest": {
+    "again": "Volver a sugerir",
+    "first": "Sugerir fotos",
+    "keepsPinned_one": "Respeta la fijada. Las demás pueden cambiar.",
+    "keepsPinned_other": "Respeta las {{count}} fijadas. Las demás pueden cambiar.",
+    "mayChangeAll": "Puede cambiar todas: fija las que quieras conservar.",
+    "firstHint": "Elige una foto para cada plano. Luego lo revisas en Montaje.",
+    "needsSong": "Primero analiza la canción en el paso <link>Canción</link>."
+  },
+  "excluded": {
+    "title": "Quitadas de este vídeo",
+    "restored": "Recuperada: puede volver a salir en las sugerencias",
+    "restore": "Recuperar esta foto",
+    "restoreShort": "Recuperar",
+    "hint": "«No usar» las deja aquí. Toca una para recuperarla."
+  },
+  "pool": {
+    "title": "Fotos candidatas",
+    "counting": "Contando las fotos de estos filtros y cuántas están analizadas…",
+    "total_one": "<b>{{count, number}}</b> foto o vídeo con estos filtros",
+    "total_other": "<b>{{count, number}}</b> fotos y vídeos con estos filtros",
+    "analyzed": "Analizadas en la GPU",
+    "progress": "{{done, number}} de {{total, number}}",
+    "offline": "<b>{{name}} está apagado: {{n, number}} sin analizar.</b> Esas fotos pueden salir sin el aviso de foto sensible, y su calidad (ojos, sonrisa, enfoque) no cuenta al elegir. Enciéndelo y se analizan solas.",
+    "note": "Calidad, caras y etiquetas (de ahí salen los avisos de fotos sensibles).",
+    "analyzingNow": "Analizando ahora.",
+    "onSuggest": "Lo que falte se hace al sugerir."
+  }
+}

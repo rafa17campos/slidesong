@@ -1,0 +1,118 @@
+{
+  "title": {
+    "change": "Cambiar foto · Plano {{n}}",
+    "pair": "Segunda foto · Plano {{n}}"
+  },
+  "done": {
+    "changed": "Plano {{n}}: foto cambiada",
+    "pair": "Plano {{n}}: segunda foto puesta",
+    "auto": "Plano {{n}}: la app elige la segunda foto"
+  },
+  "sort": {
+    "label": "Ordenar por",
+    "fit": "Mejor para este plano",
+    "query": "Más parecida a lo buscado",
+    "quality": "Más bonitas",
+    "near": "Más cerca de la fecha",
+    "new": "Más recientes",
+    "old": "Más antiguas"
+  },
+  "days": {
+    "label": "Fechas",
+    "same": "Misma época",
+    "sameHint": "± 3 sem.",
+    "14": "± 2 semanas",
+    "60": "± 2 meses",
+    "any": "Cualquier fecha",
+    "album": "Del álbum",
+    "project": "Fechas del proyecto"
+  },
+  "people": {
+    "label": "Personas",
+    "remove": "Quitar a {{name}}",
+    "add": "Añadir",
+    "addPerson": "Añadir persona",
+    "addPlaceholder": "Añadir persona…",
+    "any": "Salen fotos con cualquiera de ellos.",
+    "none": "Sin personas: fotos de cualquiera.",
+    "everyone": "Todas",
+    "everyoneLower": "todas las personas"
+  },
+  "show": {
+    "label": "Mostrar",
+    "hideUsed": "Ocultar las ya usadas",
+    "hideSensitive": "Ocultar <icon/> sensibles",
+    "onlyFav": "Solo <icon/> favoritas",
+    "shape": "Forma",
+    "shapeAll": "Todas",
+    "portrait": "Verticales",
+    "landscape": "Horiz.",
+    "type": "Tipo",
+    "typeAll": "Todo",
+    "photos": "Fotos",
+    "videos": "Vídeos"
+  },
+  "howMany": {
+    "label": "Cuántas",
+    "fit": "Las que encajan",
+    "all": "Ver todas",
+    "hint": "«Ver todas» enseña todas las fotos de esas fechas y personas, ráfagas incluidas."
+  },
+  "filters": "Filtros",
+  "seePhotos": "Ver las fotos",
+  "search": {
+    "label": "Buscar o pegar un enlace de Immich",
+    "placeholder": "Buscar (playa, nieve, tarta…) o pegar un enlace de Immich",
+    "placeholderPair": "Pegar un enlace de Immich",
+    "openImmich": "Abrir Immich"
+  },
+  "autoPick": "Que elija la app",
+  "results": {
+    "search": "Resultados para «{{query}}»",
+    "partners": "Del mismo momento y del mismo día",
+    "all": "Todas",
+    "fit": "Las que mejor encajan",
+    "count_one": "{{count}} foto",
+    "count_other": "{{count}} fotos",
+    "capped": "{{n}} fotos (las {{max}} más cercanas)",
+    "hidden_one": "{{count}} oculta por los filtros",
+    "hidden_other": "{{count}} ocultas por los filtros",
+    "more": "Mostrar más"
+  },
+  "loading": {
+    "search": "Buscando…",
+    "all": "Cargando todas las fotos…",
+    "fit": "Buscando las que mejor encajan con la frase…"
+  },
+  "empty": {
+    "filtered": "Ninguna con esos filtros.",
+    "none": "Nada con esas fechas y personas: amplía las fechas o busca."
+  },
+  "card": {
+    "put": "Poner la foto del {{date}}",
+    "putWarned": "Poner la foto del {{date}}, aviso: {{warning}}",
+    "favorite": "Favorita",
+    "usedIn": "en el plano {{n}}",
+    "use": "Poner",
+    "details": "Ficha de la foto",
+    "detailsOf": "Ficha de la foto del {{date}}",
+    "confirm": {
+      "label": "Foto con aviso",
+      "warning": "Tiene aviso: {{warning}}",
+      "ask": "¿Ponerla igualmente?",
+      "yes": "Ponerla",
+      "no": "No"
+    }
+  },
+  "burst": {
+    "now": "Ahora en el plano",
+    "title_one": "Misma ráfaga · {{count}} foto",
+    "title_other": "Misma ráfaga · {{count}} fotos",
+    "hint": "— el mismo momento: suele bastar con elegir otra cara",
+    "photo": "Foto {{n}} de la ráfaga",
+    "isSet": "puesta",
+    "isBest": "la mejor",
+    "set": "Puesta",
+    "best": "★ La mejor"
+  }
+}

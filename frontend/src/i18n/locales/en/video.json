@@ -1,0 +1,71 @@
+{
+  "quality": {
+    "preview": "360p preview",
+    "final": "Final video 1080p · 60 fps",
+    "final2k": "Final video 2K · 60 fps",
+    "final4k": "Final video 4K · 60 fps",
+    "label": "Quality",
+    "tv": "for the TV"
+  },
+  "when": {
+    "today": "Today, {{time}}",
+    "yesterday": "Yesterday, {{time}}",
+    "todayInline": "today, {{time}}",
+    "yesterdayInline": "yesterday, {{time}}",
+    "date": "{{date}}, {{time}}"
+  },
+  "stale": {
+    "text": "<b>You changed the storyboard after this video.</b> What you see here doesn't include it.",
+    "button": "New preview"
+  },
+  "empty": {
+    "title": "No videos yet",
+    "ready": "Make a quick preview to check the storyboard, and the final video once you like it.",
+    "noPhotos": "First, choose photos in the Photos step.",
+    "button": "Make preview ({{time}})"
+  },
+  "create": {
+    "title": "Make a video",
+    "preview": "Quick preview",
+    "previewHint": "360p, to check the storyboard · {{time}}",
+    "button": "Make",
+    "final": "Final video",
+    "finalButton": "Make final video {{quality}}"
+  },
+  "review": {
+    "shots_one": "{{count}} shot with an unreviewed warning",
+    "shots_other": "{{count}} shots with unreviewed warnings",
+    "sensitive_one": "{{count}} sensitive photo",
+    "sensitive_other": "{{count}} sensitive photos",
+    "line": "{{shots}}.",
+    "lineSensitive": "{{shots}} ({{sensitive}}).",
+    "button": "Review"
+  },
+  "worker": {
+    "busy": "Wait for the running job to finish.",
+    "offline": "{{name}} is off: it'll run here, much slower than these times.",
+    "occupied": "{{name}} is busy with something else: the video will wait until it's done.",
+    "runsOn": "Runs on {{name}} (times are based on it).",
+    "fallbackName": "the GPU computer"
+  },
+  "export": {
+    "title": "Export for editing",
+    "body": "A zip with one video per shot (with its movement), the original photos, the song and the timeline for DaVinci Resolve, Premiere, Final Cut or Kdenlive.",
+    "button": "Export editable project"
+  },
+  "files": {
+    "title": "Videos and exports",
+    "editable": "Editable project",
+    "editableZip": "Editable project (zip)",
+    "making": "Making the video",
+    "cancelling": "Canceling…",
+    "playing": "in the player",
+    "play": "Play “{{label}}” in the player",
+    "deleteLabel": "Delete “{{label}}” from {{when}}",
+    "delete": {
+      "titleExport": "Delete the editable project from {{when}}?",
+      "titleVideo": "Delete “{{name}}” from {{when}}?",
+      "body": "This can't be undone."
+    }
+  }
+}

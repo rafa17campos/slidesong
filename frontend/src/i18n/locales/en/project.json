@@ -1,0 +1,149 @@
+{
+  "done": {
+    "render": "Your video is ready",
+    "export": "Editable project ready to download",
+    "suggest": "Photos chosen",
+    "analyze": "Song analyzed",
+    "see": "View",
+    "review": "Review",
+    "choosePhotos": "Choose photos"
+  },
+  "saveFailed": "Your change wasn't saved: {{error}}",
+  "history": {
+    "undone": "Undone: {{what}}",
+    "redone": "Redone: {{what}}",
+    "undo": "Undo: {{what}}",
+    "redo": "Redo: {{what}}",
+    "undoTitle": "Undo: {{what}} (Ctrl Z)",
+    "redoTitle": "Redo: {{what}} (Ctrl Shift Z)",
+    "nothingToUndo": "Nothing to undo",
+    "nothingToRedo": "Nothing to redo"
+  },
+  "analyze": {
+    "confirm": {
+      "title": "Analyze the song again?",
+      "body": "This redoes the shots. Each chosen photo (and the pinned ones) moves to the new shot at the same moment; a few may be left out. Undo history and hand-picked transitions are cleared. Only do this if you changed the lyrics or the MP3.",
+      "confirm": "Analyze again"
+    }
+  },
+  "suggest": {
+    "noPeople": {
+      "title": "Suggest without choosing people?",
+      "body": "You haven't picked anyone in “Who's in them”: all photos from those dates will be used.",
+      "confirm": "Suggest anyway"
+    },
+    "checking": "Checking which photos have been analyzed…",
+    "noGpu": {
+      "title": "Suggest without {{name}}?",
+      "pending_one": "{{name}} is off and <b>{{pending}}</b> of the {{pool}} candidate photos hasn't been analyzed on the GPU.",
+      "pending_other": "{{name}} is off and <b>{{pending}}</b> of the {{pool}} candidate photos haven't been analyzed on the GPU.",
+      "risk": "Those photos may show up <b>without the sensitive photo warning</b> (and “Avoid” won't filter them out), and their quality (eyes, smile, focus) won't count. If you turn on {{name}}, they're analyzed automatically when you suggest.",
+      "confirm": "Suggest anyway"
+    }
+  },
+  "action": {
+    "wait": "Wait until this finishes: {{job}}",
+    "moment": "One moment…",
+    "nextPhotos": "Next: Photos",
+    "analyze": "Analyze the song",
+    "analyzeShort": "Analyze",
+    "suggest": "Suggest photos",
+    "suggestAgain": "Suggest again",
+    "suggestShort": "Suggest",
+    "preview": "Preview",
+    "previewShort": "Preview",
+    "final": "Final video",
+    "finalShort": "Final"
+  },
+  "freeze": {
+    "confirm": {
+      "title": "Lock the project?",
+      "body": "It's saved just as it is: no photos, framing, settings, lyrics or song can be changed (and the project can't be deleted). You can still watch and make videos, and create a new version to keep going from it. You can unlock it later.",
+      "confirm": "Lock"
+    },
+    "done": "Project locked"
+  },
+  "unfreeze": {
+    "confirm": {
+      "title": "Unlock the project?",
+      "body": "It can be changed again. If you want to keep this version as it is, better create a new version and change that one.",
+      "confirm": "Unlock"
+    },
+    "done": "Project unlocked"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Delete “{{title}}”?",
+      "body": "This deletes the project, its song and its videos from Slidesong. Your Immich photos aren't touched. This can't be undone.",
+      "confirm": "Delete project"
+    },
+    "done": "“{{title}}” deleted"
+  },
+  "copy": {
+    "ref": "project {{id}}",
+    "done": "Copied: paste it into your chat with Claude, with your question",
+    "failed": "Couldn't copy: project {{id}}"
+  },
+  "stale": "{{error}}: what you see may be out of date.",
+  "frozen": {
+    "badge": "Locked",
+    "badgeTitle": "Locked: you can watch and make videos, but not change it",
+    "bar": "<b>Locked</b> on {{date}}: you can watch and make videos, but not change it.",
+    "newVersion": "Create a new version",
+    "newVersionShort": "New version",
+    "unlock": "Unlock"
+  },
+  "versionOf": "Version of <link>“{{title}}”</link>",
+  "menu": {
+    "label": "More project options",
+    "newVersion": "Create a new version…",
+    "unlock": "Unlock…",
+    "lock": "Lock (finished)…",
+    "backup": "Backup…",
+    "copyRef": "Copy reference for Claude",
+    "delete": "Delete project",
+    "unlockToDelete": "Unlock it first to delete it"
+  },
+  "header": {
+    "back": "Back to your videos",
+    "notSaved": "Not saved · Retry",
+    "saving": "Saving…",
+    "saved": "Saved"
+  },
+  "tabs": {
+    "label": "Project steps",
+    "step": "Step {{n}}: {{name}}",
+    "done": "done",
+    "warnings_one": "{{count}} warning",
+    "warnings_other": "{{count}} warnings",
+    "working": "working",
+    "shots_one": "{{count}} shot",
+    "shots_other": "{{count}} shots",
+    "videos_one": "{{count}} video",
+    "videos_other": "{{count}} videos",
+    "warnedShots": "Shots with warnings"
+  },
+  "job": {
+    "where": "on {{where}}",
+    "cancel": "Cancel: {{job}}",
+    "runningOn": "Running on {{where}}",
+    "cancelling": "Canceling “{{job}}”…",
+    "nothingHalfDone": "nothing half-done is kept",
+    "cancelled": "{{job}}: canceled",
+    "unchanged": "everything is as it was",
+    "closeNotice": "Close this notice",
+    "failed": "{{job}}: couldn't finish",
+    "details": "Details",
+    "prep": "Analyzing photos<span> for this project on the GPU</span>:",
+    "prepCount": "{{done}} of {{total}}",
+    "left": " · ≈ {{left}} left",
+    "waiting": "waiting for {{where}}"
+  },
+  "newVersion": {
+    "title": "Create a new version",
+    "created": "New version created from “{{title}}”",
+    "body": "Copies the whole edit of “{{title}}”: the song and its analysis, the lyrics, the chosen and pinned photos, framing, texts and settings. Its videos and undo history aren't copied. The original stays as it is.",
+    "name": "Name of the new version",
+    "create": "Create version"
+  }
+}

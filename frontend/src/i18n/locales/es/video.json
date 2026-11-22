@@ -1,0 +1,71 @@
+{
+  "quality": {
+    "preview": "Vista previa 360p",
+    "final": "Vídeo final 1080p · 60 fps",
+    "final2k": "Vídeo final 2K · 60 fps",
+    "final4k": "Vídeo final 4K · 60 fps",
+    "label": "Calidad",
+    "tv": "para la tele"
+  },
+  "when": {
+    "today": "Hoy, {{time}}",
+    "yesterday": "Ayer, {{time}}",
+    "todayInline": "hoy, {{time}}",
+    "yesterdayInline": "ayer, {{time}}",
+    "date": "{{date}}, {{time}}"
+  },
+  "stale": {
+    "text": "<b>Has cambiado el montaje después de este vídeo.</b> Lo que ves aquí no lo incluye.",
+    "button": "Vista previa nueva"
+  },
+  "empty": {
+    "title": "Aún no hay vídeos",
+    "ready": "Haz una vista previa rápida para revisar el montaje, y el vídeo final cuando te guste.",
+    "noPhotos": "Primero elige las fotos en el paso Fotos.",
+    "button": "Crear vista previa ({{time}})"
+  },
+  "create": {
+    "title": "Crear vídeo",
+    "preview": "Vista previa rápida",
+    "previewHint": "360p, para revisar el montaje · {{time}}",
+    "button": "Crear",
+    "final": "Vídeo final",
+    "finalButton": "Crear vídeo final {{quality}}"
+  },
+  "review": {
+    "shots_one": "{{count}} plano con aviso sin revisar",
+    "shots_other": "{{count}} planos con aviso sin revisar",
+    "sensitive_one": "{{count}} foto sensible",
+    "sensitive_other": "{{count}} fotos sensibles",
+    "line": "{{shots}}.",
+    "lineSensitive": "{{shots}} ({{sensitive}}).",
+    "button": "Revisar"
+  },
+  "worker": {
+    "busy": "Espera a que termine el trabajo en marcha.",
+    "offline": "{{name}} está apagado: se hará aquí, bastante más lento que estos tiempos.",
+    "occupied": "{{name}} está ocupado con otra cosa: el vídeo esperará a que termine.",
+    "runsOn": "Se hace en {{name}} (los tiempos son con él).",
+    "fallbackName": "el PC de la GPU"
+  },
+  "export": {
+    "title": "Exportar para editar",
+    "body": "Un zip con un vídeo por plano (con su movimiento), las fotos originales, la canción y la línea de tiempo para DaVinci Resolve, Premiere, Final Cut o Kdenlive.",
+    "button": "Exportar proyecto editable"
+  },
+  "files": {
+    "title": "Vídeos y exportaciones",
+    "editable": "Proyecto editable",
+    "editableZip": "Proyecto editable (zip)",
+    "making": "Montando el vídeo",
+    "cancelling": "Cancelando…",
+    "playing": "en el reproductor",
+    "play": "Ver «{{label}}» en el reproductor",
+    "deleteLabel": "Borrar «{{label}}» de {{when}}",
+    "delete": {
+      "titleExport": "¿Borrar el proyecto editable de {{when}}?",
+      "titleVideo": "¿Borrar «{{name}}» de {{when}}?",
+      "body": "No se puede deshacer."
+    }
+  }
+}

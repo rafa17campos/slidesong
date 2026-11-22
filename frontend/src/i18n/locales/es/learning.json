@@ -1,0 +1,175 @@
+{
+  "groups": {
+    "photo": "Cómo es la foto",
+    "lyrics": "Lo que dice la letra",
+    "project": "El proyecto"
+  },
+  "signals": {
+    "aesthetic": { "name": "Bonitas", "help": "La puntuación estética de la foto (luz, composición)." },
+    "smile": { "name": "Sonrisas", "help": "Caras sonriendo." },
+    "face": {
+      "name": "Caras que se ven bien",
+      "help": "Caras grandes en la foto, y varias personas juntas."
+    },
+    "frontal": { "name": "Mirando a cámara", "help": "Caras de frente mejor que de perfil." },
+    "fav": { "name": "Favoritas de Immich", "help": "Las que marcaste con estrella en Immich." },
+    "eyes_closed": { "name": "Ojos cerrados", "help": "Las aparta. «Más» las aparta más." },
+    "blurry": { "name": "Desenfocadas", "help": "Caras movidas o borrosas. «Más» las aparta más." },
+    "quality": {
+      "name": "Capturas y documentos",
+      "help": "Capturas de pantalla, memes, papeles. «Más» las aparta más."
+    },
+    "lyric": { "name": "Parecido con la frase", "help": "Cuánto se parece la foto a lo que dice esa frase." },
+    "concept": {
+      "name": "Cosas que nombra",
+      "help": "La frase habla de playa, nieve, tarta…: fotos donde se ve."
+    },
+    "tag": {
+      "name": "Objetos que nombra",
+      "help": "Las etiquetas de la foto incluyen algo que nombra la frase."
+    },
+    "person": { "name": "Sale quien nombra", "help": "La frase nombra a alguien y sale en la foto." },
+    "place": {
+      "name": "El lugar que nombra",
+      "help": "La frase nombra el pueblo, la provincia o el país de la foto."
+    },
+    "month": { "name": "El mes que nombra", "help": "La frase nombra un mes: fotos de ese mes." },
+    "season": {
+      "name": "La estación que nombra",
+      "help": "La frase nombra una estación: fotos de esos meses."
+    },
+    "theme": { "name": "Parecido con el tema", "help": "Con el tema del proyecto (② Fotos)." },
+    "album": {
+      "name": "En el álbum del proyecto",
+      "help": "Las fotos del álbum de Immich elegido en ② Fotos."
+    },
+    "stranger": {
+      "name": "Solo salen otros",
+      "help": "Fotos donde solo salen personas que no son las del proyecto. «Más» las aparta más."
+    },
+    "video": { "name": "Vídeos", "help": "Vídeos cortos en lugar de fotos." }
+  },
+  "levels": {
+    "none": "Nada",
+    "less": "Menos",
+    "normal": "Normal",
+    "more": "Más",
+    "muchMore": "Mucho más"
+  },
+  "percentChange": "{{sign}}{{n}} %",
+  "signal": {
+    "learned": "Lo aprendido: {{pct}}.",
+    "learnedUnapplied": "Lo aprendido: {{pct}} (sin aplicar).",
+    "general": "En general: {{level}}.",
+    "asUsual": "Como siempre"
+  },
+  "tuning": {
+    "title": "Ajustes de este proyecto",
+    "intro": "Solo para este proyecto, encima de lo general (lo aprendido y <link>tus ajustes para todos</link>). Por ejemplo, en un vídeo de fotos antiguas, menos «Desenfocadas». Se nota en «Cambiar foto» y al volver a sugerir.",
+    "resetAll": "Todo «Como siempre»"
+  },
+  "page": {
+    "back": "Tus vídeos",
+    "eyebrow": "Aprendizaje",
+    "title": "Cómo elige las fotos",
+    "intro": "Lo que aprende de tus cambios es <b>cómo eliges</b>: si pesan más las sonrisas o la letra, si te importan las desenfocadas. Eso vale para todos los proyectos. <b>De qué van las fotos</b> (verano, nieve, playa) es de cada proyecto: el tema, las fechas y «Evitar», en ② Fotos."
+  },
+  "status": {
+    "title": "Lo aprendido",
+    "few_one": "{{count}} corrección: empieza a ajustarse a partir de 20. Mientras, se usan los pesos de fábrica.",
+    "few_other": "{{count}} correcciones: empieza a ajustarse a partir de 20. Mientras, se usan los pesos de fábrica.",
+    "accuracy": "Con {{n}} correcciones, en las que no ha visto, acierta tu elección el <b>{{learned}} %</b> de las veces frente al {{def}} % con los pesos de fábrica.",
+    "inUse": "Se está usando.",
+    "notInUse": "Solo se usa si mejora 5 puntos o más, así que <b>ahora se usan los de fábrica</b>.",
+    "noData": "Aún no tiene bastantes datos.",
+    "changed": "Lo que ha cambiado: {{what}}.",
+    "wouldChange": "Lo que cambiaría: {{what}}.",
+    "more_one": "cuentan más {{names}}",
+    "more_other": "cuentan más {{names}}",
+    "less_one": "cuentan menos {{names}}",
+    "less_other": "cuentan menos {{names}}",
+    "both": "{{more}}; {{less}}",
+    "updated": "Última vez: {{date}}. Se vuelve a ajustar solo tras cada sugerencia.",
+    "learning": "Aprendiendo…",
+    "relearn": "Aprender de nuevo",
+    "startOver": "Empezar de cero…",
+    "relearnToast": "Aprendiendo de nuevo: tarda un par de minutos"
+  },
+  "resetAll": {
+    "title": "¿Empezar de cero?",
+    "body_one": "Se olvida la única anotación de todos los proyectos y se vuelve a los pesos de fábrica. Las fotos fijadas hasta ahora no vuelven a contar; lo que corrijas a partir de ahora, sí. Tus niveles a mano no cambian. Queda una copia de lo borrado en el servidor.",
+    "body_other": "Se olvidan las {{count}} anotaciones de todos los proyectos y se vuelve a los pesos de fábrica. Las fotos fijadas hasta ahora no vuelven a contar; lo que corrijas a partir de ahora, sí. Tus niveles a mano no cambian. Queda una copia de lo borrado en el servidor.",
+    "confirm": "Empezar de cero",
+    "done_one": "Olvidada {{count}} anotación: empieza de cero",
+    "done_other": "Olvidadas {{count}} anotaciones: empieza de cero"
+  },
+  "levelsCard": {
+    "title": "Cuánto cuenta cada cosa",
+    "reset": "Todo a «Normal»",
+    "resetDone": "Todo vuelve a «Normal»",
+    "intro": "Para todos los proyectos, encima de lo aprendido. Se nota en «Cambiar foto» y en la próxima sugerencia; las fotos ya puestas no cambian. Cada proyecto puede ajustarlo aún más en ② Fotos."
+  },
+  "projects": {
+    "title": "Proyectos",
+    "intro": "Un proyecto de pruebas, o uno muy distinto a los demás, puede no enseñar nada.",
+    "deleted": "Proyecto borrado",
+    "corrections_one": "{{count}} corrección",
+    "corrections_other": "{{count}} correcciones",
+    "accepted_one": "{{count}} plano aceptado",
+    "accepted_other": "{{count}} planos aceptados",
+    "factory": "usa los pesos de fábrica",
+    "ownSettings": "con ajustes propios",
+    "notTeaching": "No enseña a la app",
+    "forget": "Olvidar",
+    "startOver": "Empezar de cero",
+    "learnsFrom": "Aprende de él",
+    "learnsFromLabel": "Aprender de «{{title}}»",
+    "stop": {
+      "titleDeleted": "¿Olvidar lo que enseñó?",
+      "title": "¿Dejar de aprender de «{{title}}»?",
+      "body_one": "Se borra su única anotación y la app se vuelve a ajustar sin ella. Queda una copia en el servidor.",
+      "body_other": "Se borran sus {{count}} anotaciones y la app se vuelve a ajustar sin ellas. Queda una copia en el servidor.",
+      "confirm": "Dejar de aprender",
+      "teachesAgain": "«{{title}}» vuelve a enseñar",
+      "forgotten": "Olvidado"
+    },
+    "restart": {
+      "title": "¿Empezar de cero con «{{title}}»?",
+      "body_one": "Se olvida su única anotación, también sus fotos fijadas hasta ahora. Lo que corrijas a partir de ahora en él vuelve a contar. Queda una copia en el servidor.",
+      "body_other": "Se olvidan sus {{count}} anotaciones, también sus fotos fijadas hasta ahora. Lo que corrijas a partir de ahora en él vuelve a contar. Queda una copia en el servidor.",
+      "done_one": "Olvidada {{count}} anotación de «{{title}}»",
+      "done_other": "Olvidadas {{count}} anotaciones de «{{title}}»"
+    }
+  },
+  "events": {
+    "title": "Tus correcciones",
+    "project": "Proyecto",
+    "allProjects": "Todos los proyectos",
+    "intro": "Cada vez que cambias una foto la app anota «esta mejor que aquella». Si alguna fue una prueba o un error, quítala.",
+    "showAccepted": "Ver también los planos que dejaste como estaban",
+    "none": "Ninguna todavía.",
+    "removed": "Quitada: ya no cuenta para aprender",
+    "action": {
+      "reject": "Quitada",
+      "accept": "Aceptada",
+      "change": "Cambiada"
+    },
+    "source": {
+      "alts": "de las alternativas",
+      "options": "con «Cambiar foto»",
+      "all": "con «Ver todas»",
+      "search": "buscando",
+      "burst": "de la misma ráfaga",
+      "immich": "con un enlace de Immich",
+      "swap": "intercambiando planos",
+      "pinned": "fijada",
+      "pinAsIs": "fijada tal cual",
+      "final": "al hacer el vídeo final"
+    },
+    "deletedProject": "proyecto borrado",
+    "shot": "plano {{n}}",
+    "remove": "Quitar esta corrección",
+    "removeHint": "Quitar: deja de contar para aprender",
+    "more": "Ver más ({{n}})"
+  }
+}

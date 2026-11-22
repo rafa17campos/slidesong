@@ -1,0 +1,229 @@
+{
+  "board": {
+    "label": "Storyboard",
+    "noShots": "No shots yet: analyze the song in the “Song” step.",
+    "reviewWarnings": "Review warnings",
+    "selected": "Selected shot",
+    "editShot": "Edit shot {{n}}",
+    "counter": "Warning {{n}} of {{total}}",
+    "shots_one": "{{count}} shot",
+    "shots_other": "{{count}} shots"
+  },
+  "filters": {
+    "label": "Show",
+    "all": "All",
+    "warnings": "With warnings",
+    "pinned": "Pinned",
+    "videos": "Videos",
+    "subs": "Subtitles"
+  },
+  "empty": {
+    "all": "No shots.",
+    "warnings": "No shots with warnings.",
+    "pinned": "No pinned shots.",
+    "videos": "No shots are videos.",
+    "subs": "No shots with subtitles."
+  },
+  "size": {
+    "label": "Size",
+    "cards": "Cards with lyrics",
+    "dense": "Photos only, compact"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "button": "Keyboard shortcuts (?)"
+  },
+  "swap": {
+    "bar": "Tap a shot to swap photos with shot {{n}}",
+    "done": "Swapped the photos of shots {{a}} and {{b}}"
+  },
+  "toasts": {
+    "rejected": "Shot {{n}}: photo removed from this video",
+    "burst": "Shot {{n}}: another photo from the burst",
+    "immich": "Shot {{n}}: Immich photo added",
+    "noLink": "There's no Immich photo link in the clipboard",
+    "noClipboard": "Can't read the clipboard: paste the link in “Change photo”",
+    "undone": "Undone: {{what}}",
+    "redone": "Redone: {{what}}"
+  },
+  "shot": {
+    "title": "Shot {{n}}",
+    "heading": "Shot {{n}} <m>of {{total}}</m>",
+    "prev": "Previous shot",
+    "next": "Next shot"
+  },
+  "editor": {
+    "play": "Play shot with music",
+    "photoDetails": "Photo details",
+    "instrumental": "♪ Instrumental",
+    "lineContinues": "↳ line continues",
+    "subtitle": "Subtitle",
+    "subtitleHere": "Subtitle on this shot",
+    "changePhoto": "Change photo",
+    "change": "Change",
+    "pin": "Pin",
+    "pinned": "Pinned",
+    "pinPhoto": "Pin this photo",
+    "unpinPhoto": "Unpin: let the app change it",
+    "pinTitle": "Pin (F)",
+    "pinnedTitle": "Pinned (F)",
+    "swap": "Swap with another shot",
+    "paste": "Paste Immich link",
+    "reject": "Don't use",
+    "rejectTitle": "Remove it from this video and use another one (X)",
+    "more": "More",
+    "whyTitle": "Why this photo",
+    "metaVideo": "video · {{s}} s",
+    "metaPortrait": "photo · portrait",
+    "metaLandscape": "photo · landscape",
+    "readOnlyFrozen": "Project locked: view only. To change something, create a new version.",
+    "readOnlyAnalyze": "Nothing can be changed while the song is being analyzed.",
+    "readOnlySuggest": "Nothing can be changed while photos are being suggested.",
+    "undo": "Undo: {{what}}",
+    "redo": "Redo: {{what}}",
+    "nothingToUndo": "Nothing to undo",
+    "nothingToRedo": "Nothing to redo"
+  },
+  "callout": {
+    "reviewed": "Reviewed: you pinned it.",
+    "goto": "Go to {{n}}",
+    "pixelateHint": "The photo doesn't have enough resolution for that much movement.",
+    "setAuto": "Set to auto",
+    "sensitiveHint": "Check it before showing the video.",
+    "addPhoto": "Add photo",
+    "change": "Change"
+  },
+  "burst": {
+    "title_one": "Same burst · {{count}} photo",
+    "title_other": "Same burst · {{count}} photos",
+    "photo": "Photo {{n}} of the burst",
+    "photoInUse": "Photo {{n}} of the burst, in use",
+    "photoBest": "Photo {{n}} of the burst, the app's best pick",
+    "photoInUseBest": "Photo {{n}} of the burst, in use, the app's best pick",
+    "inUse": "In use",
+    "best": "★ Best"
+  },
+  "camera": {
+    "title": "Camera",
+    "sharesWith": "Shares the screen with shot {{n}} (diptych).",
+    "split": "Split",
+    "video": "It's a video: its middle part is used, without sound.",
+    "framing": "Framing",
+    "framingLabel": "Framing of this shot",
+    "auto": "Automatic",
+    "secondPhoto": "Second photo",
+    "pairFrom": "Another photo {{from}}",
+    "secondPhotoDetails": "Second photo details",
+    "changeSecond": "Change",
+    "removeSecond": "Remove the second photo",
+    "captionFirst": "Text written on the first photo",
+    "captionSecond": "Text written on the second photo",
+    "noText": "no text",
+    "autoBadge": "auto",
+    "backToAutoText": "Back to the automatic text"
+  },
+  "move": {
+    "title": "How much it moves",
+    "auto": "auto",
+    "label": "Amount of movement",
+    "still": "still",
+    "red": "It will pixelate",
+    "yellow": "Some quality loss shows",
+    "autoMax": "Auto: as much as possible without losing quality",
+    "ok": "No quality loss"
+  },
+  "transition": {
+    "title": "Transition into shot {{n}}",
+    "diptychNext": "⇉ Diptych with the next one",
+    "label": "Transition to the next shot",
+    "beats_one": "{{count}} beat",
+    "beats_other": "{{count}} beats"
+  },
+  "snippet": {
+    "failed": "Couldn't make it: {{error}}",
+    "making": "Making a few seconds of video with its music…"
+  },
+  "tile": {
+    "shot": "Shot {{n}}, {{time}}",
+    "hasWarnings": "has warnings",
+    "pinned": "pinned",
+    "noPhoto": "no photo",
+    "reviewed": "{{text}} (reviewed: you pinned it)",
+    "pinnedTitle": "Pinned",
+    "sharesWith": "Shares the screen with shot {{n}}",
+    "instrumental": "♪ instrumental",
+    "withSubtitle": "with subtitle",
+    "continues": "↳ cont.: "
+  },
+  "songMap": {
+    "label": "Song map: tap a part to go to its shots",
+    "warning": "Warning on shot {{n}}"
+  },
+  "sheet": {
+    "title": "Photo details",
+    "shot": "· shot {{n}}",
+    "ref": "photo {{id}} · project {{project}}",
+    "refShot": "photo {{id}} · project {{project}} · shot {{n}}",
+    "copied": "Copied: paste it into your chat with Claude, with your question",
+    "copyFailed": "Couldn't copy it: select it and copy it by hand",
+    "faces": "Faces",
+    "landscape": "landscape",
+    "portrait": "portrait",
+    "openImmich": "Open in Immich",
+    "whyHere": "Why it's in this shot",
+    "analyzeFailed": "Couldn't analyze it: {{error}}",
+    "analyzing": "Analyzing…",
+    "fit": {
+      "title": "Fit with the line",
+      "local": "The translator reads it as <i>“{{english}}”</i>.",
+      "localVisual": "The translator reads it as <i>“{{english}}”</i> and looks for <b>{{visual}}</b>.",
+      "claude": "Claude reads it as <i>“{{english}}”</i>.",
+      "claudeVisual": "Claude reads it as <i>“{{english}}”</i> and looks for <b>{{visual}}</b>.",
+      "outOf": "of 100",
+      "better": "Fits better than {{pct}}% of the candidate photos for this line."
+    },
+    "data": {
+      "title": "Details",
+      "date": "Date",
+      "place": "Place",
+      "noPlace": "no location",
+      "nearby": "Near",
+      "people": "People",
+      "noName": "no name",
+      "noFaces": "no faces detected",
+      "camera": "Camera",
+      "file": "File",
+      "favorite": "favorite"
+    },
+    "gpu": {
+      "title": "GPU analysis",
+      "aesthetic": "Looks",
+      "outOf": "of 10",
+      "typical": "Your photos usually score between 4 and 6.5.",
+      "eyesClosed": "closed",
+      "eyesOpen": "open",
+      "frontal": "looking at the camera",
+      "side": "in profile",
+      "focusSmall": "face too small to judge the focus",
+      "blurry": "out of focus ({{v}})",
+      "soft": "a bit soft ({{v}})",
+      "sharp": "in focus ({{v}})",
+      "noFaces": "No faces to analyze.",
+      "notYet": "Not analyzed with the GPU yet (it happens when suggesting, with the GPU computer on)."
+    },
+    "modelSees": "What the model sees",
+    "ask": {
+      "title": "Ask Claude about it",
+      "hint": "Copy this and paste it into your chat with Claude, with your question:",
+      "copy": "Copy"
+    },
+    "video": {
+      "usedChosen": "Part used: <b>{{from}} – {{to}} s</b> ({{len}} s) · chosen by you",
+      "usedCenter": "Part used: <b>{{from}} – {{to}} s</b> ({{len}} s) · middle of the video",
+      "play": "Play the part",
+      "startHere": "Start here ({{t}} s)",
+      "backToCenter": "Back to the middle",
+      "note": "A video: a part of it is used in the video, without sound."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Copia de seguridad",
+  "titleProject": "Copia de seguridad del proyecto",
+  "aboutProject": "Un archivo .zip con «{{title}}»: el montaje entero, lo que se puede deshacer y la canción. Las fotos no van: siguen en Immich.",
+  "aboutAll": "Un archivo .zip con todos los proyectos (el montaje, lo que se puede deshacer y la canción), lo que la app ha aprendido de tus cambios y el análisis de las fotos hecho con la GPU. Las fotos no van: siguen en Immich.",
+  "projects_one": "{{count}} proyecto",
+  "projects_other": "{{count}} proyectos",
+  "last": "última copia el {{date}}",
+  "never": "nunca se ha hecho una copia",
+  "includeVideos": "Incluir los vídeos hechos",
+  "restore": "Para restaurarla: con Slidesong parado, descomprime el .zip dentro de la carpeta <code>data</code>.",
+  "preparing": "Preparando la copia: la descarga empieza en unos segundos"
+}
