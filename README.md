@@ -20,7 +20,7 @@ How to use it, step by step: the [user guide](docs/user-guide.md) ([en español]
 
 ## Requirements
 - Immich, reachable from the machine that runs Slidesong, and an API key of your user (see below).
-- Docker (or Python 3.12 + [uv](https://docs.astral.sh/uv/) and Node 24 to run it from source).
+- Docker (or Python 3.12 + [uv](https://docs.astral.sh/uv/) and Node 26 to run it from source).
 - Optional: an NVIDIA GPU machine for the [worker](#gpu-worker-optional) (photo quality scores and tags, faster
   transcription and rendering); an [Anthropic API key](#lyrics-model-optional) for a better reading of the lyrics.
 
