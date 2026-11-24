@@ -11,6 +11,8 @@ output.jsonl: one JSON per photo as soon as it is done (the worker reads the lin
               focus: sharpness of the face itself (eyes/nose/mouth, same scale for every face); below ~1.8 the face
               looks soft. Only for faces at least 100 px wide (smaller ones always look soft). The older "sharp"
               includes the background around the face, so a sharp textured wall made a blurry face look sharp.
+              A face under ORIGINAL_BELOW px wide in the preview is measured on the original photo: the preview
+              blurs small faces, so their focus read soft and their expression was guessed from a few pixels.
 """
 import io
 import json
@@ -24,15 +26,19 @@ from pathlib import Path
 import cv2
 import httpx
 import numpy as np
+import pillow_heif
 import torch
 from PIL import Image, ImageOps
+
+pillow_heif.register_heif_opener()
 
 HERE = Path(__file__).resolve().parent
 LANDMARKER = HERE / "face_landmarker.task"
 LANDMARKER_URL = ("https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/"
                   "float16/latest/face_landmarker.task")
 BATCH = 16
-VERSION = 2
+VERSION = 3
+ORIGINAL_BELOW = 200
 
 
 def load_aesthetic():
@@ -106,28 +112,43 @@ def face_scores(landmarker, rgb, box, name):
 
 
 def _image_source(job):
-    """(URL template with {id}, client) for each photo's preview: Immich itself when the worker has a key, else
-    the Slidesong app (which goes to Immich for it)."""
+    """(preview URL template, original URL template, client), templates with {id}: Immich itself when the worker
+    has a key, else the Slidesong app (which goes to Immich for it)."""
     if job.get("immich_url"):
-        return (job["immich_url"].rstrip("/") + "/api/assets/{id}/thumbnail?size=preview",
-                httpx.Client(timeout=60, headers={"x-api-key": job["immich_key"]}))
+        base = job["immich_url"].rstrip("/") + "/api/assets/{id}"
+        return (base + "/thumbnail?size=preview", base + "/original",
+                httpx.Client(timeout=120, headers={"x-api-key": job["immich_key"]}))
     token = job.get("token", "")
-    return (job["images_url"].rstrip("/") + "/api/assets/{id}/preview",
-            httpx.Client(timeout=60, headers={"Authorization": f"Bearer {token}"} if token else {}))
+    base = job["images_url"].rstrip("/") + "/api/assets/{id}"
+    return (base + "/preview", base + "/original",
+            httpx.Client(timeout=120, headers={"Authorization": f"Bearer {token}"} if token else {}))
+
+
+def _small_face(im, face):
+    return (face["box"][2] - face["box"][0]) * im.width < ORIGINAL_BELOW
 
 def main(inp, outp):
     job = json.loads(Path(inp).read_text(encoding="utf-8"))
     items = job["items"]
-    base, client = _image_source(job)
+    preview_url, original_url, client = _image_source(job)
     model, prep, dtype, dev = load_aesthetic()
     landmarker = load_landmarker()
 
-    def fetch(it):
-        r = client.get(base.format(id=it["id"]))
+    def load(url):
+        r = client.get(url)
         if r.status_code != 200:
-            return it, None
-        im = ImageOps.exif_transpose(Image.open(io.BytesIO(r.content))).convert("RGB")
-        return it, im
+            return None
+        try:
+            return ImageOps.exif_transpose(Image.open(io.BytesIO(r.content))).convert("RGB")
+        except Exception:
+            return None
+
+    def fetch(it):
+        im = load(preview_url.format(id=it["id"]))
+        if im is None:
+            return it, None, None
+        small = any(_small_face(im, f) for f in it.get("faces", []))
+        return it, im, load(original_url.format(id=it["id"])) if small else None
 
     lock = threading.Lock()
     with open(outp, "w", encoding="utf-8") as fo, ThreadPoolExecutor(8) as pool:
@@ -135,19 +156,25 @@ def main(inp, outp):
             got = [x for x in pool.map(fetch, items[start:start + BATCH]) if x[1] is not None]
             if not got:
                 continue
-            pv = prep(images=[im for _, im in got], return_tensors="pt").pixel_values.to(dtype).to(dev)
+            pv = prep(images=[im for _, im, _ in got], return_tensors="pt").pixel_values.to(dtype).to(dev)
             with torch.inference_mode():
                 aes = model(pv).logits.squeeze(-1).float().cpu().numpy()
-            for (it, im), a in zip(got, aes):
+            for (it, im, orig), a in zip(got, aes):
                 rgb = np.asarray(im)
+                orig_rgb = np.asarray(orig) if orig is not None else None
+
+                def face(f):
+                    src, src_rgb = (orig, orig_rgb) if orig is not None and _small_face(im, f) else (im, rgb)
+                    return {**face_scores(landmarker, src_rgb, f["box"], f.get("name") or ""),
+                            "focus": face_focus(src, f["box"])}
+
                 small = cv2.resize(rgb, None, fx=768 / max(rgb.shape[:2]), fy=768 / max(rgb.shape[:2]),
                                    interpolation=cv2.INTER_AREA)
                 gray = cv2.cvtColor(small, cv2.COLOR_RGB2GRAY)
                 rec = {"id": it["id"], "v": VERSION, "aesthetic": round(float(a), 3), "sharp": lap_sharp(gray),
                        "bright": round(float(gray.mean() / 255), 3),
                        "clip_hi": round(float((gray > 250).mean()), 4), "clip_lo": round(float((gray < 5).mean()), 4),
-                       "faces": [{**face_scores(landmarker, rgb, f["box"], f.get("name") or ""),
-                                  "focus": face_focus(im, f["box"])} for f in it.get("faces", [])]}
+                       "faces": [face(f) for f in it.get("faces", [])]}
                 with lock:
                     fo.write(json.dumps(rec, ensure_ascii=False) + "\n")
                     fo.flush()

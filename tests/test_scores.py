@@ -47,7 +47,7 @@ def test_face_sharpness_uses_the_scorers_own_thresholds(tmp_path, monkeypatch):
     assert scores._blur([0.1]) == 0.0
 
 
-def test_older_databases_are_the_reference_scorers(tmp_path, monkeypatch):
+def test_older_databases_are_the_version_2_reference_scorers(tmp_path, monkeypatch):
     import json as js
     import sqlite3
     scores = _fresh(tmp_path, monkeypatch)
@@ -56,4 +56,6 @@ def test_older_databases_are_the_reference_scorers(tmp_path, monkeypatch):
         c.execute("insert into scores values ('a', 2, ?, 'x')", (js.dumps({"id": "a", "aesthetic": 5.0}),))
         c.execute("insert into scores values ('b', 1, ?, 'x')", (js.dumps({"id": "b", "aesthetic": 4.0}),))
     c.close()
+    assert scores.get(["a", "b"]) == {}  # the reference scorer is version 3 now: scored again
+    scores.use_scorer(scores.UNNAMED)
     assert set(scores.get(["a", "b"])) == {"a"}  # version 1 was already out of date

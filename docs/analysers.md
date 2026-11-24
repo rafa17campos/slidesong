@@ -13,7 +13,7 @@ licence, your own heuristics).
 {
   "kind": "scorer",
   "name": "aesthetic-v2.5",
-  "version": 2,
+  "version": 3,
   "script": "score.py",
   "face_focus": { "blurry": 1.6, "soft": 1.8 }
 }
@@ -36,8 +36,9 @@ licence, your own heuristics).
 ```
 Either `immich_url` + `immich_key` (fetch `GET {immich_url}/api/assets/{id}/thumbnail?size=preview` with the
 header `x-api-key`) or `images_url` + `token` (fetch `GET {images_url}/api/assets/{id}/preview` with
-`Authorization: Bearer {token}`). Face boxes are relative (0..1) to the photo, with the person's name (empty when
-unknown); the tagger gets no faces.
+`Authorization: Bearer {token}`). The reference scorer also fetches the photo's `original` (same paths, `original`
+instead of the preview) when a face is under 200 px wide in the preview, and measures those faces on it. Face
+boxes are relative (0..1) to the photo, with the person's name (empty when unknown); the tagger gets no faces.
 
 ## Output: `output.jsonl`
 One JSON object per photo, written as soon as it is done (the worker counts lines for the progress). A photo that

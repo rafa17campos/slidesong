@@ -12,6 +12,7 @@ dependencies = [
   "aesthetic-predictor-v2-5>=2024.12.18",
   "mediapipe>=0.10.20",
   "pillow>=11",
+  "pillow-heif>=0.20",
   "numpy>=2",
   "httpx>=0.28",
 ]

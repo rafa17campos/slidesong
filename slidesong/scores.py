@@ -18,7 +18,8 @@ from . import config
 DATA = config.DATA
 DB = DATA / "scores.sqlite"
 # the scorer shipped in scorer/ (its analyser.json); the active one is whatever the worker last announced
-REFERENCE = {"name": "aesthetic-v2.5", "version": 2, "face_focus": {"blurry": 1.6, "soft": 1.8}}
+REFERENCE = {"name": "aesthetic-v2.5", "version": 3, "face_focus": {"blurry": 1.6, "soft": 1.8}}
+UNNAMED = {"name": "aesthetic-v2.5", "version": 2}
 VERSION = REFERENCE["version"]
 ACTIVE = DATA / "scorer.json"
 
@@ -64,7 +65,7 @@ def _conn():
     cols = {r[1] for r in c.execute("pragma table_info(scores)")}
     if "scorer" not in cols:  # before scorers had an identity: version 2 was the reference scorer
         c.execute("alter table scores add column scorer text")
-        c.execute("update scores set scorer = ? where v = ?", (scorer_id(REFERENCE), REFERENCE["version"]))
+        c.execute("update scores set scorer = ? where v = ?", (scorer_id(UNNAMED), UNNAMED["version"]))
     return c
 
 
