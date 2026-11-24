@@ -76,7 +76,7 @@ def _can_fetch(client: str):
 
 
 def _immich_faces(items):
-    """Face boxes (relative) and person names from Immich for the items that came without them."""
+    """Face boxes (relative), person names and person ids from Immich for the items that came without them."""
     import httpx
     from concurrent.futures import ThreadPoolExecutor
     todo = [it for it in items if "faces" not in it]
@@ -91,7 +91,8 @@ def _immich_faces(items):
             fl = []
         it["faces"] = [{"box": [f["boundingBoxX1"] / f["imageWidth"], f["boundingBoxY1"] / f["imageHeight"],
                                 f["boundingBoxX2"] / f["imageWidth"], f["boundingBoxY2"] / f["imageHeight"]],
-                        "name": (f.get("person") or {}).get("name") or ""}
+                        "name": (f.get("person") or {}).get("name") or "",
+                        "person_id": (f.get("person") or {}).get("id")}
                        for f in fl if isinstance(f, dict) and f.get("imageWidth") and f.get("imageHeight")]
     with ThreadPoolExecutor(8) as pool:
         list(pool.map(one, todo))

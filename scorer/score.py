@@ -2,7 +2,7 @@
 
     python score.py input.json output.jsonl
 
-input.json: {"immich_url", "immich_key"} or {"images_url": "http://slidesong-host:8096", "token"}, "items": [{"id": uuid, "faces": [{"box": [x1,y1,x2,y2], "name": str}]}]}
+input.json: {"immich_url", "immich_key"} or {"images_url": "http://slidesong-host:8096", "token"}, "items": [{"id": uuid, "faces": [{"box": [x1,y1,x2,y2], "name": str, "person_id": uuid|null}]}]}
 output.jsonl: one JSON per photo as soon as it is done (the worker reads the line count for progress):
   aesthetic   aesthetic-predictor v2.5 (SigLIP), roughly 1..10
   sharp       Laplacian variance of the whole photo (log10), higher = sharper
@@ -15,6 +15,8 @@ output.jsonl: one JSON per photo as soon as it is done (the worker reads the lin
               blurs small faces, so their focus read soft and their expression was guessed from a few pixels.
               Only image originals are downloaded (never a video's), and only a crop around each small face is
               kept; when the original cannot be had, that face is measured on the preview as before.
+              person_id: the Immich person the face is assigned to (lowercase UUID), null when it has none; left
+              out when the input face did not say (an older client that sends faces without it).
 """
 import io
 import json
@@ -22,6 +24,7 @@ import math
 import sys
 import threading
 import urllib.request
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -112,6 +115,24 @@ def face_scores(landmarker, rgb, box, name):
         out["frontal"] = abs(yaw) < 25 and abs(pitch) < 25
     return out
 
+
+
+def person_id(face):
+    """The input face's Immich person id in canonical lowercase form; None when unassigned or not a UUID."""
+    pid = face.get("person_id")
+    try:
+        return str(uuid.UUID(str(pid))) if pid else None
+    except ValueError:
+        return None
+
+
+def face_entry(scores, face, focus):
+    """One faces[] entry of the record: the measured scores, the input box, the focus and (when the input carries
+    it) the person id, last so the earlier keys keep their order."""
+    out = {**scores, "box": face["box"], "focus": focus}
+    if "person_id" in face:
+        out["person_id"] = person_id(face)
+    return out
 
 
 def _image_source(job):
@@ -226,9 +247,8 @@ def main(inp, outp):
 
                 def face(i, f):
                     src, box = crops.get(i, (im, f["box"]))
-                    return {**face_scores(landmarker, rgb if src is im else np.asarray(src), box,
-                                          f.get("name") or ""),
-                            "box": f["box"], "focus": face_focus(src, box)}
+                    return face_entry(face_scores(landmarker, rgb if src is im else np.asarray(src), box,
+                                                  f.get("name") or ""), f, face_focus(src, box))
 
                 small = cv2.resize(rgb, None, fx=768 / max(rgb.shape[:2]), fy=768 / max(rgb.shape[:2]),
                                    interpolation=cv2.INTER_AREA)

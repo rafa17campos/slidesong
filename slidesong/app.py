@@ -329,7 +329,7 @@ def score_missing(asset_ids, progress=None):
     if not todo or not w.get("scorer"):
         tag_missing(asset_ids, progress)
         return 0
-    items = [{"id": a, "faces": [{"box": f["box"], "name": f.get("person") or ""}
+    items = [{"id": a, "faces": [{"box": f["box"], "name": f.get("person") or "", "person_id": f.get("person_id")}
                                  for f in immich._faces_cache.get(a, [])]} for a in todo]
     done = 0
     for k in range(0, len(items), 500):

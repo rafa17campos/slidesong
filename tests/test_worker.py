@@ -65,7 +65,8 @@ def test_faces_are_looked_up_when_missing(worker, monkeypatch):
     class Resp:
         def json(self):
             return [{"boundingBoxX1": 10, "boundingBoxY1": 20, "boundingBoxX2": 30, "boundingBoxY2": 40,
-                     "imageWidth": 100, "imageHeight": 200, "person": {"name": "Nico"}}]
+                     "imageWidth": 100, "imageHeight": 200,
+                     "person": {"name": "Nico", "id": "1c0d9a7e-5b8f-4a2e-9d3c-7f6e5d4c3b2a"}}]
 
     class Client:
         def __init__(self, **kw):
@@ -76,7 +77,8 @@ def test_faces_are_looked_up_when_missing(worker, monkeypatch):
     monkeypatch.setattr(httpx, "Client", Client)
     items = [{"id": "a"}, {"id": "b", "faces": []}]
     worker._immich_faces(items)
-    assert items[0]["faces"] == [{"box": [0.1, 0.1, 0.3, 0.2], "name": "Nico"}] and items[1]["faces"] == []
+    assert items[0]["faces"] == [{"box": [0.1, 0.1, 0.3, 0.2], "name": "Nico",
+                                  "person_id": "1c0d9a7e-5b8f-4a2e-9d3c-7f6e5d4c3b2a"}] and items[1]["faces"] == []
 
 
 def test_health_tells_the_scorer_version_and_tagger_model(worker):

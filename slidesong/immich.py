@@ -237,7 +237,7 @@ def _faces_one(aid):
         if not w or not h:
             continue
         out.append({"box": [f["boundingBoxX1"] / w, f["boundingBoxY1"] / h, f["boundingBoxX2"] / w, f["boundingBoxY2"] / h],
-                    "person": (f.get("person") or {}).get("name")})
+                    "person": (f.get("person") or {}).get("name"), "person_id": (f.get("person") or {}).get("id")})
     _faces_cache[aid] = out
     return out
 
