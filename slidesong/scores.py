@@ -27,12 +27,34 @@ _lock = threading.Lock()
 _active = {"mtime": None, "info": REFERENCE}
 
 
+def _last_known():
+    """No scorer.json: the worker never announced anything but the reference scorer of its day. A database whose
+    records are all of the version 2 reference scorer was made before version 3 shipped, so that is still the
+    active one until the worker announces otherwise (else updating the app would hide every score at once)."""
+    if DB.exists():
+        try:  # no _lock: callers of active() may hold it, and this only reads
+            c = _conn()
+            try:
+                ids = {r[0] for r in c.execute("select distinct scorer from scores where scorer is not null")}
+            finally:
+                c.close()
+        except sqlite3.Error:
+            ids = set()
+        if ids == {scorer_id(UNNAMED)}:
+            return {**REFERENCE, "version": UNNAMED["version"]}
+    return REFERENCE
+
+
 def active() -> dict:
     """The active scorer: {name, version, face_focus}."""
     try:
         m = ACTIVE.stat().st_mtime_ns
     except OSError:
-        return REFERENCE
+        info = _last_known()
+        if info is not REFERENCE:  # remember it, so later records of other scorers do not change the answer
+            ACTIVE.parent.mkdir(parents=True, exist_ok=True)
+            ACTIVE.write_text(json.dumps(info))
+        return info
     if _active["mtime"] != m:
         try:
             info = json.loads(ACTIVE.read_text())
@@ -66,6 +88,7 @@ def _conn():
     if "scorer" not in cols:  # before scorers had an identity: version 2 was the reference scorer
         c.execute("alter table scores add column scorer text")
         c.execute("update scores set scorer = ? where v = ?", (scorer_id(UNNAMED), UNNAMED["version"]))
+        c.commit()  # at once: other connections (the active scorer's guess) must see it
     return c
 
 

@@ -56,9 +56,15 @@ def test_older_databases_are_the_version_2_reference_scorers(tmp_path, monkeypat
         c.execute("insert into scores values ('a', 2, ?, 'x')", (js.dumps({"id": "a", "aesthetic": 5.0}),))
         c.execute("insert into scores values ('b', 1, ?, 'x')", (js.dumps({"id": "b", "aesthetic": 4.0}),))
     c.close()
-    assert scores.get(["a", "b"]) == {}  # the reference scorer is version 3 now: scored again
-    scores.use_scorer(scores.UNNAMED)
+    # still version 2 until the worker announces version 3: updating the app does not hide the scores
     assert set(scores.get(["a", "b"])) == {"a"}  # version 1 was already out of date
+    scores.use_scorer(scores.REFERENCE)
+    assert scores.get(["a", "b"]) == {}  # the worker has version 3: scored again
+
+
+def test_a_new_database_starts_with_the_current_reference_scorer(tmp_path, monkeypatch):
+    scores = _fresh(tmp_path, monkeypatch)
+    assert scores.active() == scores.REFERENCE and not scores.ACTIVE.exists()
 
 
 def test_version_2_records_without_faces_are_kept_for_version_3(tmp_path, monkeypatch):
@@ -66,6 +72,7 @@ def test_version_2_records_without_faces_are_kept_for_version_3(tmp_path, monkey
     scores.put([{"id": "land", "v": 2, "aesthetic": 5.0, "faces": [], "tags": ["sea"]},
                 {"id": "kids", "v": 2, "aesthetic": 6.0, "faces": [{"box": [0, 0, .1, .1], "found": True}]}],
                scores.UNNAMED)
+    scores.use_scorer(scores.REFERENCE)  # the worker announces version 3
     assert scores.missing(["land", "kids", "new"]) == ["kids", "new"]  # only faces changed in version 3
     assert scores.get(["land"])["land"] == {"id": "land", "v": 3, "aesthetic": 5.0, "faces": [], "tags": ["sea"]}
     scores.use_scorer({"name": "other", "version": 1})  # another scorer: nothing carried over
