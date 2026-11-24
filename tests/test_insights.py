@@ -35,7 +35,7 @@ def test_records_are_used_as_this_apps_own(hub):
     url, kw = calls[0]
     assert url == "http://library/api/gallery/insights/lookup" and kw["timeout"] == 2.0
     assert kw["headers"] == {"Authorization": "Bearer lib_t"}
-    assert kw["json"] == {"assetIds": ["a", "b"], "enqueueMissing": True}
+    assert kw["json"] == {"assetIds": ["a", "b"]}
     assert scores.get(["a", "b"])["a"]["tags"] == ["dog"]
 
 

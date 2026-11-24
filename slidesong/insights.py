@@ -6,7 +6,7 @@ the photos it lacks go the usual way (its own worker), and any failure (network,
 just means the usual way, with at most one warning a minute in the log.
 
 Contract (the other app):
-  POST {url}/api/gallery/insights/lookup  {"assetIds": [...], "enqueueMissing": bool}
+  POST {url}/api/gallery/insights/lookup  {"assetIds": [...]}  (it always queues the photos it lacks)
     -> {"items": {"<id>": {"record": {...worker record, with "tags"...}, "scorerVersion": 2, "scorerName"?: "...",
                            "updatedAt": "..."}},
         "missing": ["<id>", ...], "queued": n}
@@ -54,9 +54,9 @@ def status() -> dict | None:
         return None
 
 
-def pull(asset_ids, enqueue=True) -> int | None:
+def pull(asset_ids) -> int | None:
     """Copy what the other app has for these photos into scores.sqlite (records of the current scorer version, with
-    their tags); it queues the rest when `enqueue`. Returns how many it still lacks, or None when it does not
+    their tags); the other app queues the rest. Returns how many it still lacks, or None when it does not
     answer."""
     if not configured():
         return None
@@ -67,7 +67,7 @@ def pull(asset_ids, enqueue=True) -> int | None:
         chunk = todo[k:k + BATCH]
         try:
             r = httpx.post(f"{URL}/api/gallery/insights/lookup", headers=_h(), timeout=TIMEOUT,
-                           json={"assetIds": chunk, "enqueueMissing": enqueue})
+                           json={"assetIds": chunk})
             if r.status_code != 200:
                 _warn(f"status {r.status_code}")
                 return None

@@ -100,7 +100,8 @@ Without either, lines are matched in their own language only.
 ## Photo analysis kept by another service (optional)
 With `SLIDESONG_INSIGHTS_URL` and `SLIDESONG_INSIGHTS_TOKEN` (`slidesong/insights.py` has the contract), Slidesong
 takes the quality scores and tags from a service that keeps them for your whole library (and drives the same
-worker) before each suggestion, keeps a copy, and analyses what that service lacks the usual way. Any failure, or a
+worker) before each suggestion, keeps a copy, and analyses what that service lacks the usual way. Every lookup
+also has that service queue the photos it lacks. Any failure, or a
 reply slower than 2 s, just means the usual way.
 
 ## Languages

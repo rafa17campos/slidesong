@@ -946,7 +946,7 @@ def api_coverage(pid: str):
     p = load(pid)
     ids = pool_ids(p)
     if insights.configured():
-        insights.pull(ids, enqueue=False)  # what the other app already has (insights.py)
+        insights.pull(ids)  # what the other app already has (insights.py); it queues what it lacks
     pending = set(scores.missing(ids)) | set(scores.untagged(ids))
     w = remote.available() or {}
     hub = insights.status()
