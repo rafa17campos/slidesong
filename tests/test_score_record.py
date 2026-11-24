@@ -1,7 +1,7 @@
-"""The scorer's per-face record entries (scorer/score.py runs in its own venv: torch is stubbed here)."""
-import importlib.util
-import sys
-import types
+"""The scorer's per-face record entries. scorer/score.py runs in its own venv (torch, MediaPipe...), so only its
+record helpers are taken from it here, without importing the whole script."""
+import ast
+import uuid
 from pathlib import Path
 
 import pytest
@@ -9,13 +9,14 @@ import pytest
 PID = "1c0d9a7e-5b8f-4a2e-9d3c-7f6e5d4c3b2a"
 
 
-@pytest.fixture
-def score(monkeypatch):
-    monkeypatch.setitem(sys.modules, "torch", types.ModuleType("torch"))
-    spec = importlib.util.spec_from_file_location("score", Path(__file__).parent.parent / "scorer" / "score.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+@pytest.fixture(scope="module")
+def score():
+    src = (Path(__file__).parent.parent / "scorer" / "score.py").read_text(encoding="utf-8")
+    tree = ast.parse(src)
+    tree.body = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in ("person_id", "face_entry")]
+    ns = {"uuid": uuid}
+    exec(compile(tree, "score.py", "exec"), ns)
+    return type("score", (), {k: staticmethod(ns[k]) for k in ("person_id", "face_entry")})
 
 
 def test_faces_carry_the_immich_person_id(score):
@@ -31,7 +32,7 @@ def test_faces_carry_the_immich_person_id(score):
     assert unassigned["person_id"] is None and unassigned["name"] == ""
 
 
-def test_faces_without_a_person_id_in_the_input_do_not_claim_one(score):
-    e = score.face_entry({"name": "Nico", "box": [0, 0, 1, 1], "found": False}, {"box": [0, 0, 1, 1], "name": "Nico"}, None)
-    assert "person_id" not in e
-    assert score.person_id({"person_id": "not-a-uuid"}) is None
+def test_an_unknown_person_id_is_left_out_not_null(score):
+    face = {"name": "Nico", "box": [0, 0, 1, 1], "found": False}
+    assert "person_id" not in score.face_entry(face, {"box": [0, 0, 1, 1], "name": "Nico"}, None)
+    assert "person_id" not in score.face_entry(face, {"box": [0, 0, 1, 1], "name": "Nico", "person_id": "abc"}, None)

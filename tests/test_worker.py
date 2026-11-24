@@ -155,3 +155,35 @@ def test_script_warnings_reach_the_worker_log(worker, monkeypatch, tmp_path, cap
     worker._run_script(tmp_path, "score.py", [{"id": "a"}], tmp_path, lambda x: None, "r.json")
     out = capsys.readouterr().out
     assert "score.py: warning: the original photos are not allowed" in out and "mediapipe" not in out
+
+
+def test_slidesong_sends_the_person_ids_and_leaves_unknown_faces_to_the_worker(monkeypatch):
+    from slidesong import app as A, immich, insights, scores
+    pid = "1c0d9a7e-5b8f-4a2e-9d3c-7f6e5d4c3b2a"
+    faces = {"a": [{"boundingBoxX1": 0, "boundingBoxY1": 0, "boundingBoxX2": 50, "boundingBoxY2": 50,
+                    "imageWidth": 100, "imageHeight": 100, "person": {"name": "Nico", "id": pid}},
+                   {"boundingBoxX1": 50, "boundingBoxY1": 50, "boundingBoxX2": 100, "boundingBoxY2": 100,
+                    "imageWidth": 100, "imageHeight": 100, "person": None}]}
+
+    def get(path, id=None, **kw):
+        if id not in faces:
+            raise immich.httpx.ConnectError("down")
+        return faces[id]
+    sent = []
+    monkeypatch.setattr(immich, "_get", get)
+    for a in ("a", "b"):
+        immich._faces_cache.pop(a, None)
+    monkeypatch.setattr(insights, "pull", lambda ids: None)
+    monkeypatch.setattr(A.remote, "available", lambda: {"scorer": True})
+    monkeypatch.setattr(A.remote, "score", lambda items, progress=None: sent.extend(items) or [])
+    monkeypatch.setattr(scores, "use_scorer", lambda info: None)
+    monkeypatch.setattr(scores, "missing", lambda ids: list(ids))
+    monkeypatch.setattr(scores, "put", lambda recs: None)
+    monkeypatch.setattr(A, "tag_missing", lambda *a, **k: 0)
+    try:
+        A.score_missing(["a", "b"])
+    finally:
+        for a in ("a", "b"):
+            immich._faces_cache.pop(a, None)
+    assert [f["person_id"] for f in sent[0]["faces"]] == [pid, None]
+    assert sent[1] == {"id": "b"}  # Immich did not answer: the worker looks its faces up

@@ -329,8 +329,11 @@ def score_missing(asset_ids, progress=None):
     if not todo or not w.get("scorer"):
         tag_missing(asset_ids, progress)
         return 0
-    items = [{"id": a, "faces": [{"box": f["box"], "name": f.get("person") or "", "person_id": f.get("person_id")}
-                                 for f in immich._faces_cache.get(a, [])]} for a in todo]
+    immich.faces(todo)  # fills the face cache; a photo Immich did not answer for goes without "faces" so
+    # the worker looks them up itself (with "faces": [] the record would claim the photo has none)
+    items = [{"id": a, **({"faces": [{"box": f["box"], "name": f.get("person") or "", "person_id": f.get("person_id")}
+                                     for f in immich._faces_cache[a]]} if a in immich._faces_cache else {})}
+             for a in todo]
     done = 0
     for k in range(0, len(items), 500):
         chunk = items[k:k + 500]

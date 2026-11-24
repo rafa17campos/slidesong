@@ -16,7 +16,8 @@ output.jsonl: one JSON per photo as soon as it is done (the worker reads the lin
               Only image originals are downloaded (never a video's), and only a crop around each small face is
               kept; when the original cannot be had, that face is measured on the preview as before.
               person_id: the Immich person the face is assigned to (lowercase UUID), null when it has none; left
-              out when the input face did not say (an older client that sends faces without it).
+              out when the input face did not say (an older client that sends faces without it) or sent
+              something that is not a UUID.
 """
 import io
 import json
@@ -118,20 +119,22 @@ def face_scores(landmarker, rgb, box, name):
 
 
 def person_id(face):
-    """The input face's Immich person id in canonical lowercase form; None when unassigned or not a UUID."""
+    """The input face's Immich person id in canonical lowercase form, None when the face has no person.
+    ValueError when it is something else than a UUID."""
     pid = face.get("person_id")
-    try:
-        return str(uuid.UUID(str(pid))) if pid else None
-    except ValueError:
-        return None
+    return str(uuid.UUID(str(pid))) if pid else None
 
 
 def face_entry(scores, face, focus):
     """One faces[] entry of the record: the measured scores, the input box, the focus and (when the input carries
-    it) the person id, last so the earlier keys keep their order."""
+    it) the person id, last so the earlier keys keep their order. A person id that is not a UUID is left out
+    (unknown) rather than written as null, which would say the face has no person."""
     out = {**scores, "box": face["box"], "focus": focus}
     if "person_id" in face:
-        out["person_id"] = person_id(face)
+        try:
+            out["person_id"] = person_id(face)
+        except ValueError:
+            pass
     return out
 
 

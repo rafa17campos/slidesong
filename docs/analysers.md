@@ -62,7 +62,7 @@ count.
 | `faces[].eyes_open` | 0..1 | below 0.25 on a big enough face: «eyes closed» |
 | `faces[].frontal` | true / false | «looking at the camera» |
 | `faces[].focus` | sharpness of the face itself, the scorer's own scale | against `face_focus` |
-| `faces[].person_id` | the Immich person the face is assigned to (lowercase UUID), `null` when none; missing in older records and when the input face did not carry it (unknown) | for other apps: matching faces to people by id, not by name |
+| `faces[].person_id` | the Immich person the face is assigned to (lowercase UUID), `null` when none; missing in older records and when the input face did not carry a UUID (unknown) | for other apps: matching faces to people by id, not by name |
 
 The reference scorer also writes `sharp`, `bright`, `clip_hi`, `clip_lo` and per face `yaw`, `pitch`, `sharp`:
 kept, not used by the suggestions.
