@@ -13,6 +13,8 @@ output.jsonl: one JSON per photo as soon as it is done (the worker reads the lin
               includes the background around the face, so a sharp textured wall made a blurry face look sharp.
               A face under ORIGINAL_BELOW px wide in the preview is measured on the original photo: the preview
               blurs small faces, so their focus read soft and their expression was guessed from a few pixels.
+              Only image originals are downloaded (never a video's), and only a crop around each small face is
+              kept; when the original cannot be had, that face is measured on the preview as before.
 """
 import io
 import json
@@ -39,6 +41,7 @@ LANDMARKER_URL = ("https://storage.googleapis.com/mediapipe-models/face_landmark
 BATCH = 16
 VERSION = 3
 ORIGINAL_BELOW = 200
+ORIGINALS_AT_ONCE = 2  # decoded originals in memory at the same time
 
 
 def load_aesthetic():
@@ -127,28 +130,87 @@ def _image_source(job):
 def _small_face(im, face):
     return (face["box"][2] - face["box"][0]) * im.width < ORIGINAL_BELOW
 
+
+_warned = set()
+
+
+def warn_once(key, msg):
+    """One line on stderr (the worker shows lines starting with "warning:" in its log)."""
+    if key not in _warned:
+        _warned.add(key)
+        print("warning: " + msg, file=sys.stderr, flush=True)
+
+
+def face_crops(orig, im, faces):
+    """{face index: (crop, box relative to the crop)} for the small faces, cut from the original photo so the
+    original itself can be let go at once (a 50 MP photo is 150 MB decoded). Each crop holds the face plus its
+    own size on every side, more than face_scores and face_focus look at, so they measure the same pixels."""
+    W, H = orig.size
+    if abs(W / H - im.width / im.height) > 0.02 * im.width / im.height:
+        return {}  # not the same framing as the preview (edited, or a RAW's embedded preview): stay on the preview
+    out = {}
+    for i, f in enumerate(faces):
+        if not _small_face(im, f):
+            continue
+        x1, y1, x2, y2 = f["box"][0] * W, f["box"][1] * H, f["box"][2] * W, f["box"][3] * H
+        cx, cy, s = (x1 + x2) / 2, (y1 + y2) / 2, max(x2 - x1, y2 - y1)
+        a, b = max(0, int(cx - s)), max(0, int(cy - s))
+        c, d = min(W, math.ceil(cx + s)), min(H, math.ceil(cy + s))
+        if c - a < 2 or d - b < 2:
+            continue
+        w, h = c - a, d - b
+        out[i] = (orig.crop((a, b, c, d)), [(x1 - a) / w, (y1 - b) / h, (x2 - a) / w, (y2 - b) / h])
+    return out
+
+
 def main(inp, outp):
     job = json.loads(Path(inp).read_text(encoding="utf-8"))
     items = job["items"]
     preview_url, original_url, client = _image_source(job)
     model, prep, dtype, dev = load_aesthetic()
     landmarker = load_landmarker()
+    originals = threading.Semaphore(ORIGINALS_AT_ONCE)
 
-    def load(url):
-        r = client.get(url)
-        if r.status_code != 200:
-            return None
+    def decode(data):
         try:
-            return ImageOps.exif_transpose(Image.open(io.BytesIO(r.content))).convert("RGB")
-        except Exception:
+            return ImageOps.exif_transpose(Image.open(io.BytesIO(data))).convert("RGB")
+        except Exception:  # not an image Pillow reads (RAW, damaged file, decompression bomb)
             return None
+
+    def preview(it):
+        r = client.get(preview_url.format(id=it["id"]))
+        return decode(r.content) if r.status_code == 200 else None
+
+    def original_crops(it, im, faces):
+        with client.stream("GET", original_url.format(id=it["id"])) as r:
+            if r.status_code in (401, 403):
+                warn_once("denied", f"the original photos are not allowed (HTTP {r.status_code}): small faces are "
+                          "measured on the preview. Give the worker's Immich key asset.download.")
+                return {}
+            # a video, or anything that is not a photo: do not download it at all
+            if r.status_code != 200 or not r.headers.get("content-type", "").startswith("image/"):
+                return {}
+            data = r.read()
+        with originals:  # only a few decoded originals in memory at once
+            orig = decode(data)
+            del data
+            return face_crops(orig, im, faces) if orig is not None else {}
 
     def fetch(it):
-        im = load(preview_url.format(id=it["id"]))
+        try:
+            im = preview(it)
+        except httpx.HTTPError:
+            im = None
         if im is None:
-            return it, None, None
-        small = any(_small_face(im, f) for f in it.get("faces", []))
-        return it, im, load(original_url.format(id=it["id"])) if small else None
+            return it, None, {}
+        faces = it.get("faces", [])
+        crops = {}
+        if any(_small_face(im, f) for f in faces):
+            try:
+                crops = original_crops(it, im, faces)
+            except httpx.HTTPError:
+                pass  # the original is a bonus: its faces stay measured on the preview
+        return it, im, crops
 
     lock = threading.Lock()
     with open(outp, "w", encoding="utf-8") as fo, ThreadPoolExecutor(8) as pool:
@@ -159,14 +221,14 @@ def main(inp, outp):
             pv = prep(images=[im for _, im, _ in got], return_tensors="pt").pixel_values.to(dtype).to(dev)
             with torch.inference_mode():
                 aes = model(pv).logits.squeeze(-1).float().cpu().numpy()
-            for (it, im, orig), a in zip(got, aes):
+            for (it, im, crops), a in zip(got, aes):
                 rgb = np.asarray(im)
-                orig_rgb = np.asarray(orig) if orig is not None else None
 
-                def face(f):
-                    src, src_rgb = (orig, orig_rgb) if orig is not None and _small_face(im, f) else (im, rgb)
-                    return {**face_scores(landmarker, src_rgb, f["box"], f.get("name") or ""),
-                            "focus": face_focus(src, f["box"])}
+                def face(i, f):
+                    src, box = crops.get(i, (im, f["box"]))
+                    return {**face_scores(landmarker, rgb if src is im else np.asarray(src), box,
+                                          f.get("name") or ""),
+                            "box": f["box"], "focus": face_focus(src, box)}
 
                 small = cv2.resize(rgb, None, fx=768 / max(rgb.shape[:2]), fy=768 / max(rgb.shape[:2]),
                                    interpolation=cv2.INTER_AREA)
@@ -174,7 +236,7 @@ def main(inp, outp):
                 rec = {"id": it["id"], "v": VERSION, "aesthetic": round(float(a), 3), "sharp": lap_sharp(gray),
                        "bright": round(float(gray.mean() / 255), 3),
                        "clip_hi": round(float((gray > 250).mean()), 4), "clip_lo": round(float((gray < 5).mean()), 4),
-                       "faces": [face(f) for f in it.get("faces", [])]}
+                       "faces": [face(i, f) for i, f in enumerate(it.get("faces", []))]}
                 with lock:
                     fo.write(json.dumps(rec, ensure_ascii=False) + "\n")
                     fo.flush()

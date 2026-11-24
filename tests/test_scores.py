@@ -59,3 +59,14 @@ def test_older_databases_are_the_version_2_reference_scorers(tmp_path, monkeypat
     assert scores.get(["a", "b"]) == {}  # the reference scorer is version 3 now: scored again
     scores.use_scorer(scores.UNNAMED)
     assert set(scores.get(["a", "b"])) == {"a"}  # version 1 was already out of date
+
+
+def test_version_2_records_without_faces_are_kept_for_version_3(tmp_path, monkeypatch):
+    scores = _fresh(tmp_path, monkeypatch)
+    scores.put([{"id": "land", "v": 2, "aesthetic": 5.0, "faces": [], "tags": ["sea"]},
+                {"id": "kids", "v": 2, "aesthetic": 6.0, "faces": [{"box": [0, 0, .1, .1], "found": True}]}],
+               scores.UNNAMED)
+    assert scores.missing(["land", "kids", "new"]) == ["kids", "new"]  # only faces changed in version 3
+    assert scores.get(["land"])["land"] == {"id": "land", "v": 3, "aesthetic": 5.0, "faces": [], "tags": ["sea"]}
+    scores.use_scorer({"name": "other", "version": 1})  # another scorer: nothing carried over
+    assert scores.missing(["land"]) == ["land"]

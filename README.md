@@ -68,7 +68,8 @@ and tags runs on the Slidesong machine, more slowly.
    be on the PATH. (Tested on Windows with an RTX 2070; on Linux you need CUDA 12 and cuDNN 9 for
    faster-whisper.)
 2. `worker.env` next to the start script (see `worker/worker.env.example`): a token, and a read-only Immich key of
-   its own (`asset.read`, `asset.view`, `face.read`) so it fetches photos and faces itself. Without that key it
+   its own (`asset.read`, `asset.view`, `asset.download`, `face.read`) so it fetches photos and faces itself
+   (`asset.download` is for the originals the scorer measures small faces on). Without that key it
    gets them through Slidesong (`SLIDESONG_IMAGES_URL`).
 3. In Slidesong's `secrets.env`: `SLIDESONG_WORKER_URL` and the same `WORKER_TOKEN`.
 4. Start it by hand when you make videos. Before each job Slidesong checks `GET /health`; if the worker is off or

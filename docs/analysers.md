@@ -37,8 +37,12 @@ licence, your own heuristics).
 Either `immich_url` + `immich_key` (fetch `GET {immich_url}/api/assets/{id}/thumbnail?size=preview` with the
 header `x-api-key`) or `images_url` + `token` (fetch `GET {images_url}/api/assets/{id}/preview` with
 `Authorization: Bearer {token}`). The reference scorer also fetches the photo's `original` (same paths, `original`
-instead of the preview) when a face is under 200 px wide in the preview, and measures those faces on it. Face
-boxes are relative (0..1) to the photo, with the person's name (empty when unknown); the tagger gets no faces.
+instead of the preview) when a face is under 200 px wide in the preview, and measures those faces on it: only an
+image original (never a video's), keeping just a crop around each small face, and on the preview as before when the
+original cannot be had (the worker's Immich key then needs `asset.download`). Face boxes are relative (0..1) to the
+photo, with the person's name (empty when unknown); the tagger gets no faces.
+
+Lines a script writes to stderr starting with `warning: ` show up in the worker's log.
 
 ## Output: `output.jsonl`
 One JSON object per photo, written as soon as it is done (the worker counts lines for the progress). A photo that

@@ -133,3 +133,23 @@ def test_the_shipped_manifests_match_their_scripts():
     assert f"{tg['name']}.pth" in (root / "tagger" / "tag.py").read_text()
     from slidesong import scores
     assert {k: sc[k] for k in ("name", "version", "face_focus")} == scores.REFERENCE
+
+
+def test_script_warnings_reach_the_worker_log(worker, monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(worker, "_venv_python", lambda folder: None)
+
+    class Proc:
+        returncode = 0
+
+        def poll(self):
+            return 0
+
+    def popen(cmd, stderr=None, **kw):
+        stderr.write(b"W0000 mediapipe chatter\nwarning: the original photos are not allowed\n")
+        open(cmd[-1], "w").write("")
+        return Proc()
+    import subprocess
+    monkeypatch.setattr(subprocess, "Popen", popen)
+    worker._run_script(tmp_path, "score.py", [{"id": "a"}], tmp_path, lambda x: None, "r.json")
+    out = capsys.readouterr().out
+    assert "score.py: warning: the original photos are not allowed" in out and "mediapipe" not in out

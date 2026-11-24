@@ -247,8 +247,10 @@ def _run_script(folder, script, data, d, prog, result_name):
     source = ({"immich_url": IMMICH, "immich_key": IMMICH_KEY} if IMMICH and IMMICH_KEY
               else {"images_url": config.env("IMAGES_URL", ""), "token": TOKEN})
     inp.write_text(json.dumps({**source, "items": data}, ensure_ascii=False), encoding="utf-8")
-    proc = subprocess.Popen([py, "-X", "utf8", str(folder / script), str(inp), str(out)], cwd=str(folder),
-                            env={**os.environ, "PYTHONUTF8": "1"}, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    err = d / "stderr.log"  # a file, not a pipe: MediaPipe logs a lot and a full pipe would stall the script
+    with open(err, "wb") as ef:
+        proc = subprocess.Popen([py, "-X", "utf8", str(folder / script), str(inp), str(out)], cwd=str(folder),
+                                env={**os.environ, "PYTHONUTF8": "1"}, stdout=subprocess.DEVNULL, stderr=ef)
     while proc.poll() is None:
         time.sleep(1.0)
         try:
@@ -258,8 +260,12 @@ def _run_script(folder, script, data, d, prog, result_name):
         except Cancelled:
             proc.kill()  # the GPU is freed right away
             raise
+    log = err.read_text(encoding="utf-8", errors="replace")
+    for line in log.splitlines():
+        if line.startswith("warning: "):
+            print(f"{script}: {line}", flush=True)
     if proc.returncode != 0:
-        raise RuntimeError(f"{script} failed: " + proc.stderr.read().decode("utf-8", "replace")[-400:])
+        raise RuntimeError(f"{script} failed: " + log[-400:])
     (d / result_name).write_text(json.dumps([json.loads(l) for l in open(out, encoding="utf-8")]), encoding="utf-8")
 
 

@@ -82,9 +82,33 @@ def get(ids):
     return out
 
 
+def _carry_over(ids):
+    """Version 3 of the reference scorer only changed how faces are measured, so its version 2 records of photos
+    without faces are what it would give: keep them as version 3 instead of scoring those photos again."""
+    if scorer_id() != scorer_id(REFERENCE) or not ids:
+        return
+    keep = []
+    with _lock, _conn() as c:
+        for k in range(0, len(ids), 900):
+            chunk = ids[k:k + 900]
+            q = f"select data from scores where scorer = ? and id in ({','.join('?' * len(chunk))})"
+            for (data,) in c.execute(q, [scorer_id(UNNAMED), *chunk]):
+                rec = json.loads(data)
+                if not rec.get("faces"):
+                    keep.append({**rec, "v": VERSION})
+    if keep:
+        put(keep, REFERENCE)
+
+
 def missing(ids):
+    ids = list(ids)
     have = get(ids)
-    return [a for a in ids if a not in have]
+    todo = [a for a in ids if a not in have]
+    if todo:
+        _carry_over(todo)
+        have = get(todo)
+        todo = [a for a in todo if a not in have]
+    return todo
 
 
 def _old_tags(ids):

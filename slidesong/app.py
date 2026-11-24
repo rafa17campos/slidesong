@@ -1782,6 +1782,8 @@ def api_asset(aid: str, kind: str, request: Request, authorization: str = Header
     if kind == "original":  # worker only
         if not remote.TOKEN or not hmac.compare_digest(authorization, f"Bearer {remote.TOKEN}"):
             raise HTTPException(401)
+        if ((immich._info_one(aid) if immich.UUID_RE.match(aid) else None) or {}).get("type") == "VIDEO":
+            raise HTTPException(404)  # a whole video read into memory for nothing (photos only here)
     elif kind not in ("thumbnail", "preview"):
         raise HTTPException(404)
     got = immich.fetch(aid, kind)
