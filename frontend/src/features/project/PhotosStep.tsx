@@ -321,29 +321,11 @@ export function PhotosStep() {
                 ]}
               />
               {(p.order ?? "flex") === "flex" ? (
-                <div className="row wrap">
-                  <span className="desc">{t("order.flexLead")}</span>
-                  <select
-                    className="select"
-                    style={{ width: "auto", minHeight: 32, padding: "4px 10px" }}
-                    value={p.flex_days ?? 7}
-                    onChange={(e) => set({ flex_days: +e.target.value })}
-                    aria-label={t("order.margin")}
-                  >
-                    {(
-                      [
-                        [3, t("order.days3")],
-                        [7, t("order.week1")],
-                        [14, t("order.weeks2")],
-                        [30, t("order.month1")],
-                      ] as const
-                    ).map(([v, label]) => (
-                      <option key={v} value={v}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <FlexMargin
+                  value={p.flex_days ?? 7}
+                  onChange={(flex_days, debounce) => set({ flex_days }, { debounce })}
+                  onDone={() => void settings.flush().catch(() => {})}
+                />
               ) : (
                 <div className="desc">
                   {p.order === "strict" ? t("order.strictDesc") : t("order.freeDesc")}
@@ -534,6 +516,86 @@ function Setting({ k, hint, children }: { k: string; hint?: string; children: Re
         {hint && <span className="hint">{hint}</span>}
       </div>
       <div className="v">{children}</div>
+    </div>
+  );
+}
+
+const MARGINS = [3, 7, 14, 30] as const;
+const MAX_MARGIN = 365;
+
+/** The "flexible" order's date margin: a few usual ones, or any number of days (up to a year). */
+function FlexMargin({
+  value,
+  onChange,
+  onDone,
+}: {
+  value: number;
+  onChange: (days: number, debounce: boolean) => void;
+  onDone: () => void;
+}) {
+  const { t } = useTranslation("photos");
+  const preset = (MARGINS as readonly number[]).includes(value);
+  const [custom, setCustom] = useState(!preset);
+  const [typed, setTyped] = useState(String(value));
+  // changed from outside (undo, another device): follow it
+  const [seen, setSeen] = useState(value);
+  if (seen !== value) {
+    setSeen(value);
+    setTyped(String(value));
+    if (!(MARGINS as readonly number[]).includes(value)) setCustom(true);
+  }
+  const labels: Record<(typeof MARGINS)[number], string> = {
+    3: t("order.days3"),
+    7: t("order.week1"),
+    14: t("order.weeks2"),
+    30: t("order.month1"),
+  };
+  return (
+    <div className="row wrap">
+      <span className="desc">{t("order.flexLead")}</span>
+      <select
+        className="select"
+        style={{ width: "auto", minHeight: 32, padding: "4px 10px" }}
+        value={custom ? "custom" : value}
+        onChange={(e) => {
+          if (e.target.value === "custom") return setCustom(true);
+          setCustom(false);
+          onChange(+e.target.value, false);
+        }}
+        aria-label={t("order.margin")}
+      >
+        {MARGINS.map((v) => (
+          <option key={v} value={v}>
+            {labels[v]}
+          </option>
+        ))}
+        <option value="custom">{t("order.custom")}</option>
+      </select>
+      {custom && (
+        <label className="row" style={{ gap: 6 }}>
+          <span className="desc">±</span>
+          <input
+            className="input tnum"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={MAX_MARGIN}
+            style={{ width: 80, minHeight: 32, padding: "4px 10px" }}
+            value={typed}
+            aria-label={t("order.customDays")}
+            onChange={(e) => {
+              setTyped(e.target.value);
+              const n = Math.round(Number(e.target.value));
+              if (e.target.value && n >= 1 && n <= MAX_MARGIN && n !== value) onChange(n, true);
+            }}
+            onBlur={() => {
+              setTyped(String(value));
+              onDone();
+            }}
+          />
+          <span className="desc">{t("order.days", { count: Number(typed) || 0 })}</span>
+        </label>
+      )}
     </div>
   );
 }
