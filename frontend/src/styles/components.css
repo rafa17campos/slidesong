@@ -3260,7 +3260,7 @@
 
 /* ===== ② Photos, scoped under .pg-photos ===== */
 @layer components {
-  .pg-photos .wrap {
+  .pg-photos > .wrap {
     max-width: 1240px;
     margin: 0 auto;
     padding: 24px 32px 64px;
@@ -3480,7 +3480,7 @@
     display: none;
   }
   @media (max-width: 1023px) {
-    .pg-photos .wrap {
+    .pg-photos > .wrap {
       grid-template-columns: minmax(0, 1fr);
       padding: 16px 12px 48px;
       gap: 16px;
