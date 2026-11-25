@@ -13,7 +13,7 @@ licence, your own heuristics).
 {
   "kind": "scorer",
   "name": "aesthetic-v2.5",
-  "version": 3,
+  "version": 4,
   "script": "score.py",
   "face_focus": { "blurry": 1.6, "soft": 1.8 }
 }

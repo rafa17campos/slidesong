@@ -18,8 +18,11 @@ from . import config
 DATA = config.DATA
 DB = DATA / "scores.sqlite"
 # the scorer shipped in scorer/ (its analyser.json); the active one is whatever the worker last announced
-REFERENCE = {"name": "aesthetic-v2.5", "version": 3, "face_focus": {"blurry": 1.6, "soft": 1.8}}
+REFERENCE = {"name": "aesthetic-v2.5", "version": 4, "face_focus": {"blurry": 1.6, "soft": 1.8}}
 UNNAMED = {"name": "aesthetic-v2.5", "version": 2}
+# earlier versions of the reference scorer whose records of photos without faces are what it gives now: 3 only
+# changed how faces are measured, 4 only added faces[].person_id
+FACELESS_SAME = (2, 3)
 VERSION = REFERENCE["version"]
 ACTIVE = DATA / "scorer.json"
 
@@ -29,8 +32,9 @@ _active = {"mtime": None, "info": REFERENCE}
 
 def _last_known():
     """No scorer.json: the worker never announced anything but the reference scorer of its day. A database whose
-    records are all of the version 2 reference scorer was made before version 3 shipped, so that is still the
-    active one until the worker announces otherwise (else updating the app would hide every score at once)."""
+    records are all of one earlier version of the reference scorer was made before the current one shipped, so that
+    is still the active one until the worker announces otherwise (else updating the app would hide every score at
+    once)."""
     if DB.exists():
         try:  # no _lock: callers of active() may hold it, and this only reads
             c = _conn()
@@ -40,8 +44,9 @@ def _last_known():
                 c.close()
         except sqlite3.Error:
             ids = set()
-        if ids == {scorer_id(UNNAMED)}:
-            return {**REFERENCE, "version": UNNAMED["version"]}
+        older = {scorer_id({**REFERENCE, "version": v}): v for v in range(1, REFERENCE["version"])}
+        if len(ids) == 1 and next(iter(ids)) in older:
+            return {**REFERENCE, "version": older[next(iter(ids))]}
     return REFERENCE
 
 
@@ -106,16 +111,18 @@ def get(ids):
 
 
 def _carry_over(ids):
-    """Version 3 of the reference scorer only changed how faces are measured, so its version 2 records of photos
-    without faces are what it would give: keep them as version 3 instead of scoring those photos again."""
+    """Records of photos without faces from earlier versions of the reference scorer (FACELESS_SAME) are what the
+    current one would give: keep them as the current version instead of scoring those photos again."""
     if scorer_id() != scorer_id(REFERENCE) or not ids:
         return
     keep = []
     with _lock, _conn() as c:
         for k in range(0, len(ids), 900):
             chunk = ids[k:k + 900]
-            q = f"select data from scores where scorer = ? and id in ({','.join('?' * len(chunk))})"
-            for (data,) in c.execute(q, [scorer_id(UNNAMED), *chunk]):
+            old = [scorer_id({**REFERENCE, "version": v}) for v in FACELESS_SAME]
+            q = (f"select data from scores where scorer in ({','.join('?' * len(old))}) "
+                 f"and id in ({','.join('?' * len(chunk))})")
+            for (data,) in c.execute(q, [*old, *chunk]):
                 rec = json.loads(data)
                 if not rec.get("faces"):
                     keep.append({**rec, "v": VERSION})

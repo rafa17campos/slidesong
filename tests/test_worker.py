@@ -83,7 +83,7 @@ def test_faces_are_looked_up_when_missing(worker, monkeypatch):
 
 def test_health_tells_the_scorer_version_and_tagger_model(worker):
     h = worker.health()
-    assert h["scorer_version"] == 3 and h["tagger_model"] == "ram_plus_swin_large_14m"
+    assert h["scorer_version"] == 4 and h["tagger_model"] == "ram_plus_swin_large_14m"
     assert {"ok", "busy", "scorer", "tagger"} <= set(h)
 
 
@@ -107,7 +107,7 @@ def test_busy_worker_refuses_a_second_job(worker):
 def test_analysers_announce_who_they_are(worker, tmp_path, monkeypatch):
     import json as js
     h = worker.health()
-    assert h["scorer_info"] == {"kind": "scorer", "name": "aesthetic-v2.5", "version": 3, "script": "score.py",
+    assert h["scorer_info"] == {"kind": "scorer", "name": "aesthetic-v2.5", "version": 4, "script": "score.py",
                                 "face_focus": {"blurry": 1.6, "soft": 1.8}}
     assert h["scorer_name"] == "aesthetic-v2.5" and h["tagger_info"]["name"] == h["tagger_model"]
     # another scorer: its own folder and manifest (SCORER_DIR)

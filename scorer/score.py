@@ -43,7 +43,7 @@ LANDMARKER = HERE / "face_landmarker.task"
 LANDMARKER_URL = ("https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/"
                   "float16/latest/face_landmarker.task")
 BATCH = 16
-VERSION = 3
+VERSION = 4  # 4: faces[].person_id
 ORIGINAL_BELOW = 200
 ORIGINALS_AT_ONCE = 2  # decoded originals in memory at the same time
 
