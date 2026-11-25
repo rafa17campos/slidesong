@@ -83,6 +83,9 @@ def test_settings_are_validated(tmp_path, client):
     assert client.patch(f"/api/projects/{pid}", json={"date_from": "06/01/2026"}).status_code == 422
     assert client.patch(f"/api/projects/{pid}", json={"date_from": ""}).status_code == 200
     assert client.patch(f"/api/projects/{pid}", json={"title": "x" * 500}).status_code == 422
+    assert client.patch(f"/api/projects/{pid}", json={"flex_days": 365}).status_code == 200  # a year, at most
+    assert client.patch(f"/api/projects/{pid}", json={"flex_days": 366}).status_code == 400
+    assert client.patch(f"/api/projects/{pid}", json={"flex_days": 0}).status_code == 400
 
 
 def test_looking_at_the_plan_does_not_touch_the_project(tmp_path, monkeypatch):

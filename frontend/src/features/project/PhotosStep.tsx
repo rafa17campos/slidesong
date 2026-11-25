@@ -524,7 +524,7 @@ const MARGINS = [3, 7, 14, 30] as const;
 const MAX_MARGIN = 365;
 
 /** The "flexible" order's date margin: a few usual ones, or any number of days (up to a year). */
-function FlexMargin({
+export function FlexMargin({
   value,
   onChange,
   onDone,
@@ -534,16 +534,25 @@ function FlexMargin({
   onDone: () => void;
 }) {
   const { t } = useTranslation("photos");
-  const preset = (MARGINS as readonly number[]).includes(value);
-  const [custom, setCustom] = useState(!preset);
+  const isPreset = (v: number) => (MARGINS as readonly number[]).includes(v);
+  const [custom, setCustom] = useState(!isPreset(value));
   const [typed, setTyped] = useState(String(value));
-  // changed from outside (undo, another device): follow it
+  const [editing, setEditing] = useState(false);
+  // changed from outside (undo, another device): follow it; what is being typed stays as it is
   const [seen, setSeen] = useState(value);
   if (seen !== value) {
     setSeen(value);
-    setTyped(String(value));
-    if (!(MARGINS as readonly number[]).includes(value)) setCustom(true);
+    if (!editing) {
+      setTyped(String(value));
+      setCustom(!isPreset(value));
+    }
   }
+  // a whole number of days in range, or null
+  const days = (s: string) => {
+    const n = Number(s);
+    return s.trim() && Number.isInteger(n) && n >= 1 && n <= MAX_MARGIN ? n : null;
+  };
+  const invalid = typed !== "" && days(typed) === null;
   const labels: Record<(typeof MARGINS)[number], string> = {
     3: t("order.days3"),
     7: t("order.week1"),
@@ -580,20 +589,33 @@ function FlexMargin({
             inputMode="numeric"
             min={1}
             max={MAX_MARGIN}
+            step={1}
             style={{ width: 80, minHeight: 32, padding: "4px 10px" }}
             value={typed}
             aria-label={t("order.customDays")}
+            aria-invalid={invalid || undefined}
+            onFocus={() => setEditing(true)}
             onChange={(e) => {
               setTyped(e.target.value);
-              const n = Math.round(Number(e.target.value));
-              if (e.target.value && n >= 1 && n <= MAX_MARGIN && n !== value) onChange(n, true);
+              const n = days(e.target.value);
+              if (n !== null && n !== value) onChange(n, true);
             }}
             onBlur={() => {
-              setTyped(String(value));
+              setEditing(false);
+              // too many days: the most there can be; anything else that is not a whole number: back to what is saved
+              const n = Number(typed);
+              const v = days(typed) ?? (Number.isFinite(n) && n > MAX_MARGIN ? MAX_MARGIN : value);
+              if (v !== value) onChange(v, false);
+              setTyped(String(v));
               onDone();
             }}
           />
-          <span className="desc">{t("order.days", { count: Number(typed) || 0 })}</span>
+          <span className="desc">{t("order.days", { count: days(typed) ?? value })}</span>
+          {invalid && (
+            <span className="desc warn-text" role="alert">
+              {t("order.customRange", { max: MAX_MARGIN })}
+            </span>
+          )}
         </label>
       )}
     </div>
