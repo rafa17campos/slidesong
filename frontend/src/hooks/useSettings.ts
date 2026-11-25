@@ -9,6 +9,18 @@ const DELAY = 700; // typing: save once the user pauses
 const POOL_KEYS = ["people", "date_from", "date_to", "album_id", "videos"];
 const PLAN_KEYS = ["pace", "motion"];
 
+/** Deep equality of JSON-like values; the order of an object's keys does not matter. */
+export function sameValue(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  const ka = Object.keys(a);
+  const kb = Object.keys(b);
+  const ra = a as Record<string, unknown>;
+  const rb = b as Record<string, unknown>;
+  return ka.length === kb.length && ka.every((k) => k in rb && sameValue(ra[k], rb[k]));
+}
+
 /**
  * Project settings with optimistic updates: the page shows a change at once; saving is debounced for typing
  * (`set(..., {debounce: true})`) and immediate otherwise. Pending changes are merged, and `flush()` saves them
@@ -84,7 +96,7 @@ export function useSettings(pid: string) {
         // compared by value: the cache hands back a copy of arrays and objects (people, tuning), so comparing
         // them by reference never matches and putting them back would fire this again, endlessly
         const now = data as unknown as Record<string, unknown>;
-        if (Object.entries(pend).some(([k, v]) => JSON.stringify(now[k]) !== JSON.stringify(v)))
+        if (Object.entries(pend).some(([k, v]) => !sameValue(now[k], v)))
           qc.setQueryData<Project>(keys.project(pid), { ...data, ...pending.current });
       }),
     [qc, pid],

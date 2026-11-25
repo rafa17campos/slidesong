@@ -95,6 +95,7 @@
     "month1": "± 1 mes",
     "custom": "Otro…",
     "customDays": "Margen en días",
+    "customRange": "De 1 a {{max}} días.",
     "days_one": "día",
     "days_other": "días",
     "strictDesc": "Las fotos van siempre en orden de fecha.",

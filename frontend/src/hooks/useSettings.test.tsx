@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { keys } from "@/api/queries";
 import type { Project } from "@/api/types";
 
-import { useSettings } from "./useSettings";
+import { sameValue, useSettings } from "./useSettings";
 
 function setup() {
   const qc = new QueryClient();
@@ -71,6 +71,23 @@ describe("useSettings", () => {
     act(() => hook.result.current.set({ people: ["Ana", "Luis"] }, { debounce: true }));
     expect(qc.getQueryData<Project>(keys.project("p1"))?.people).toEqual(["Ana", "Luis"]);
     vi.useRealTimers();
+  });
+
+  it("keeps an object (tuning) whose keys come back in another order without looping", () => {
+    vi.useFakeTimers();
+    const { qc, hook } = setup();
+    act(() => qc.setQueryData<Project>(keys.project("p1"), (old) => ({ ...old!, tuning: { b: 2, a: 1 } })));
+    act(() => hook.result.current.set({ tuning: { a: 1, b: 2 } }, { debounce: true }));
+    expect(qc.getQueryData<Project>(keys.project("p1"))?.tuning).toEqual({ a: 1, b: 2 });
+    vi.useRealTimers();
+  });
+
+  it("compares values deeply, whatever the order of the keys", () => {
+    expect(sameValue({ a: 1, b: [1, { c: 2 }] }, { b: [1, { c: 2 }], a: 1 })).toBe(true);
+    expect(sameValue(["a", "b"], ["b", "a"])).toBe(false);
+    expect(sameValue({ a: 1 }, { a: 1, b: undefined })).toBe(false);
+    expect(sameValue([], {})).toBe(false);
+    expect(sameValue(null, {})).toBe(false);
   });
 
   it("saves non-text changes immediately", async () => {
