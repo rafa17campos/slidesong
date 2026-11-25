@@ -93,6 +93,10 @@
     "week1": "± 1 week",
     "weeks2": "± 2 weeks",
     "month1": "± 1 month",
+    "custom": "Other…",
+    "customDays": "Margin in days",
+    "days_one": "day",
+    "days_other": "days",
     "strictDesc": "Photos always go in date order.",
     "freeDesc": "No date order: whichever photo fits each line best."
   },

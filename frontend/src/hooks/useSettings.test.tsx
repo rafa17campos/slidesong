@@ -64,6 +64,15 @@ describe("useSettings", () => {
     vi.useRealTimers();
   });
 
+  it("sets a list (people) without looping on the cache's copy of it", () => {
+    vi.useFakeTimers();
+    const { qc, hook } = setup();
+    act(() => qc.setQueryData<Project>(keys.project("p1"), (old) => ({ ...old!, people: ["Ana"] })));
+    act(() => hook.result.current.set({ people: ["Ana", "Luis"] }, { debounce: true }));
+    expect(qc.getQueryData<Project>(keys.project("p1"))?.people).toEqual(["Ana", "Luis"]);
+    vi.useRealTimers();
+  });
+
   it("saves non-text changes immediately", async () => {
     const { bodies, hook } = setup();
     await act(async () => {

@@ -1182,7 +1182,7 @@ def api_settings(pid: str, s: Settings):
     for k in ("date_from", "date_to", "album_id"):
         if k in data and data[k] == "":
             data[k] = None
-    if "flex_days" in data and data["flex_days"] is not None and not 1 <= data["flex_days"] <= 60:
+    if "flex_days" in data and data["flex_days"] is not None and not 1 <= data["flex_days"] <= 365:
         raise HTTPException(400, tr("Invalid margin"))
     if "videos" in data and data["videos"] not in ("off", "some", "many"):
         raise HTTPException(400, tr("Invalid video option"))

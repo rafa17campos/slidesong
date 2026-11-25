@@ -81,7 +81,10 @@ export function useSettings(pid: string) {
         const data = ev.query.state.data as Project | undefined;
         const pend = pending.current as Record<string, unknown>;
         if (!data || !Object.keys(pend).length) return;
-        if (Object.entries(pend).some(([k, v]) => (data as unknown as Record<string, unknown>)[k] !== v))
+        // compared by value: the cache hands back a copy of arrays and objects (people, tuning), so comparing
+        // them by reference never matches and putting them back would fire this again, endlessly
+        const now = data as unknown as Record<string, unknown>;
+        if (Object.entries(pend).some(([k, v]) => JSON.stringify(now[k]) !== JSON.stringify(v)))
           qc.setQueryData<Project>(keys.project(pid), { ...data, ...pending.current });
       }),
     [qc, pid],
