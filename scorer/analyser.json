@@ -3,5 +3,6 @@
   "name": "aesthetic-v2.5",
   "version": 4,
   "script": "score.py",
+  "local_images": true,
   "face_focus": { "blurry": 1.6, "soft": 1.8 }
 }
