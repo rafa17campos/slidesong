@@ -3,5 +3,6 @@
   "name": "ram_plus_swin_large_14m",
   "version": 1,
   "script": "tag.py",
+  "local_images": true,
   "vocabulary": "RAM++ (English nouns: dog, beach, puddle, swimwear…)"
 }

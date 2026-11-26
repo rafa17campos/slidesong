@@ -79,7 +79,9 @@ and tags runs on the Slidesong machine, more slowly.
 The scorer and the tagger are replaceable: any program that keeps the contract in
 [docs/analysers.md](docs/analysers.md) works (`SCORER_DIR`, `TAGGER_DIR`). The worker can serve other apps too,
 each with its own token (`WORKER_TOKENS`): with its own Immich key, a client
-only sends asset ids to `/score` and `/tag` and polls `/jobs/{id}`.
+only sends asset ids to `/score` and `/tag` and polls `/jobs/{id}`. A client that can wait may ask for
+`video_mode=deep`: videos are then analysed on frames of their own, not only on Immich's preview (see
+[docs/analysers.md](docs/analysers.md#videos)); Slidesong itself uses the quick default.
 
 ## Lyrics model (optional)
 With `ANTHROPIC_API_KEY`, Claude reads the lyrics once per song: for every line an English translation, what a

@@ -3,6 +3,7 @@
     python score.py input.json output.jsonl
 
 input.json: {"immich_url", "immich_key"} or {"images_url": "http://slidesong-host:8096", "token"}, "items": [{"id": uuid, "faces": [{"box": [x1,y1,x2,y2], "name": str, "person_id": uuid|null}]}]}
+            an item with "image" (a local file: a frame of a video, without faces) is read from it instead of fetched
 output.jsonl: one JSON per photo as soon as it is done (the worker reads the line count for progress):
   aesthetic   aesthetic-predictor v2.5 (SigLIP), roughly 1..10
   sharp       Laplacian variance of the whole photo (log10), higher = sharper
@@ -202,6 +203,11 @@ def main(inp, outp):
             return None
 
     def preview(it):
+        if it.get("image"):  # a frame the worker extracted from a video
+            try:
+                return decode(Path(it["image"]).read_bytes())
+            except OSError:
+                return None
         r = client.get(preview_url.format(id=it["id"]))
         return decode(r.content) if r.status_code == 200 else None
 
@@ -229,7 +235,7 @@ def main(inp, outp):
             return it, None, {}
         faces = it.get("faces", [])
         crops = {}
-        if any(_small_face(im, f) for f in faces):
+        if not it.get("image") and any(_small_face(im, f) for f in faces):
             try:
                 crops = original_crops(it, im, faces)
             except httpx.HTTPError:

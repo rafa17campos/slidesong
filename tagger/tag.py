@@ -3,6 +3,7 @@
     python tag.py input.json output.jsonl
 
 input.json: {"immich_url", "immich_key"} or {"images_url": "http://slidesong-host:8096", "token"}, plus "items": [{"id": uuid}]
+            an item with "image" (a local file: a frame of a video) is read from it instead of fetched
 output.jsonl: {"id": uuid, "tags": ["dog", "lawn", ...]} per photo (RAM++ default per-class thresholds).
 """
 import io
@@ -41,6 +42,11 @@ def main(inp, outp):
     transform = get_transform(image_size=384)
 
     def fetch(it):
+        if it.get("image"):  # a frame the worker extracted from a video
+            try:
+                return it, ImageOps.exif_transpose(Image.open(it["image"])).convert("RGB")
+            except OSError:
+                return it, None
         r = client.get(base.format(id=it["id"]))
         if r.status_code != 200:
             return it, None

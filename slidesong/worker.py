@@ -7,6 +7,9 @@ Env: WORKER_TOKEN (Slidesong's), WORKER_TOKENS ("name:token,…", other clients)
 (read-only: the worker fetches photos and faces itself), else SLIDESONG_IMAGES_URL (photos through Slidesong),
 SLIDESONG_VCODEC=h264_nvenc, WHISPER_DEVICE=cuda.
 One job at a time. Results are deleted once downloaded (or after 6 h).
+/score and /tag take video_mode: "fast" (default) analyses a video on Immich's preview only, "deep" on frames sampled
+from the video too (videoframes.py; docs/analysers.md, "Videos"). WORKER_FRAME_CACHE_MB caps the frames kept between
+jobs (2048).
 """
 import hmac
 import json
@@ -32,7 +35,7 @@ if sys.platform == "win32":
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 
-from . import analyze, render
+from . import analyze, render, videoframes
 from . import config
 
 TOKEN = os.environ.get("WORKER_TOKEN", "")  # Slidesong's (it also lets the worker fetch photos through Slidesong)
@@ -56,6 +59,9 @@ IMMICH = os.environ.get("IMMICH_URL", "").rstrip("/")
 IMMICH_KEY = os.environ.get("IMMICH_API_KEY", "")
 WORK = Path(os.environ.get("WORKER_DIR", tempfile.gettempdir())) / "slidesong-worker"
 WORK.mkdir(parents=True, exist_ok=True)
+FRAMES = WORK / "frames"  # video frames (deep video mode), shared by jobs: a video's tag and score jobs extract once
+FRAME_CACHE_BYTES = int(float(os.environ.get("WORKER_FRAME_CACHE_MB") or 2048) * 2 ** 20)
+VIDEO_MODES = ("fast", "deep")
 
 app = FastAPI(title="Slidesong worker")
 _jobs: dict[str, dict] = {}
@@ -103,6 +109,7 @@ def _cleanup():
         if time.time() - j["created"] > 6 * 3600:
             shutil.rmtree(WORK / jid, ignore_errors=True)
             _jobs.pop(jid, None)
+    videoframes.clean_cache(FRAMES, max_bytes=FRAME_CACHE_BYTES)
 
 
 class Cancelled(Exception):
@@ -150,6 +157,8 @@ def health():
             "tagger": bool(_venv_python(TAGGER_DIR)),
             "vcodec": config.env("VCODEC", "libx264"),
             "whisper": os.environ.get("WHISPER_DEVICE", "cpu"), "ffmpeg": bool(sh.which("ffmpeg")),
+            # video_mode=deep can be honoured (with analysers whose manifest says local_images)
+            "video_modes": list(VIDEO_MODES), "video_deep": bool(IMMICH and IMMICH_KEY and sh.which("ffmpeg")),
             # which analysers these are (docs/analysers.md): clients keep each record with its scorer's identity
             "scorer_version": sc.get("version"), "scorer_name": sc.get("name"), "scorer_info": sc,
             "tagger_model": tg.get("name"), "tagger_info": tg}
@@ -240,8 +249,9 @@ def _scorer_python():
     return _venv_python(SCORER_DIR)
 
 
-def _run_script(folder, script, data, d, prog, result_name):
-    """Run `script` from `folder`'s venv on `data` (list of items), reporting progress by output lines."""
+def _run_script(folder, script, data, d, prog, result_name, fold=None):
+    """Run `script` from `folder`'s venv on `data` (list of items), reporting progress by output lines. `fold` turns
+    the output lines into the result's records (the frames of a video into one record)."""
     import subprocess
     py = _venv_python(folder)
     inp, out = d / "in.json", d / "out.jsonl"
@@ -267,22 +277,102 @@ def _run_script(folder, script, data, d, prog, result_name):
             print(f"{script}: {line}", flush=True)
     if proc.returncode != 0:
         raise RuntimeError(f"{script} failed: " + log[-400:])
-    (d / result_name).write_text(json.dumps([json.loads(l) for l in open(out, encoding="utf-8")]), encoding="utf-8")
+    recs = [json.loads(l) for l in open(out, encoding="utf-8") if l.strip()]
+    (d / result_name).write_text(json.dumps(fold(recs) if fold else recs), encoding="utf-8")
+
+
+def _video_mode(v):
+    v = (v or "").strip() or "fast"
+    if v not in VIDEO_MODES:
+        raise HTTPException(400, "video_mode is fast or deep")
+    return v
+
+
+def _part(prog, a, b):
+    """`prog` for one part of a job, from a to b of the whole."""
+    def p(x):
+        prog(a + (b - a) * x)
+    p.check = prog.check
+    return p
+
+
+def _deep_ready(manifest):
+    """Whether videos can be analysed deep with this analyser; why not in the worker's log."""
+    why = None
+    if not (IMMICH and IMMICH_KEY):
+        why = "the worker has no Immich key of its own (IMMICH_URL + IMMICH_API_KEY)"
+    elif not manifest.get("local_images"):
+        why = f"the analyser {manifest.get('name') or '?'} does not read local images (local_images in analyser.json)"
+    elif not shutil.which("ffmpeg"):
+        why = "ffmpeg is not on the PATH"
+    if why:
+        print(f"video_mode=deep: {why}; videos are analysed on their preview (fast)", flush=True)
+    return not why
+
+
+def _immich_assets(ids):
+    """{asset id: Immich's asset (type, duration, checksum…) or None when it cannot be had}."""
+    import httpx
+    from concurrent.futures import ThreadPoolExecutor
+    client = httpx.Client(base_url=IMMICH + "/api", headers={"x-api-key": IMMICH_KEY}, timeout=60)
+
+    def one(i):
+        try:
+            r = client.get(f"/assets/{i}")
+            return i, (r.json() if r.status_code == 200 else None)
+        except (httpx.HTTPError, ValueError):
+            return i, None
+    with ThreadPoolExecutor(8) as pool:
+        return dict(pool.map(one, ids))
+
+
+def _video_frames(data, prog):
+    """(asset ids of the videos analysed deep, {asset id: [(seconds, frame file)]})."""
+    assets = _immich_assets([it["id"] for it in data])
+    videos = [(i, a) for i, a in assets.items() if isinstance(a, dict) and a.get("type") == "VIDEO"]
+    ex = videoframes.Extractor(IMMICH, IMMICH_KEY, FRAMES, prog.check, lambda m: print(m, flush=True))
+    frames = {}
+    try:
+        for k, (i, a) in enumerate(videos):
+            times = videoframes.sample_times(videoframes.parse_duration(a.get("duration")))
+            if times:  # else too short for a frame of its own: its preview only
+                frames[i] = ex.frames(i, a.get("checksum") or "", times)
+                if not frames[i]:
+                    print(f"warning: video {i}: ffmpeg could not read it, analysed on its preview only", flush=True)
+            prog((k + 1) / len(videos))
+    finally:
+        videoframes.clean_cache(FRAMES, keep=ex.used, max_bytes=FRAME_CACHE_BYTES)
+    return {i for i, _ in videos}, frames
+
+
+def _analyse(folder, kind, default_script, data, d, prog, video_mode):
+    """Run an analyser on `data`; with video_mode deep, each video is expanded into frames first and folded back
+    into one record after."""
+    m = analyser(folder)
+    videos, frames, fold = set(), {}, None
+    if video_mode == "deep" and _deep_ready(m):
+        videos, frames = _video_frames(data, _part(prog, 0, 0.3))
+        if videos:
+            prog = _part(prog, 0.3, 1)
+            fold = lambda recs: videoframes.fold(recs, videos, kind)  # noqa: E731
+    _run_script(folder, m.get("script", default_script), videoframes.expand(data, frames), d, prog, "result.json",
+                fold)
 
 
 @app.post("/score")
-async def post_score(items: str = Form(...), client: str = Depends(auth)):
+async def post_score(items: str = Form(...), video_mode: str = Form(""), client: str = Depends(auth)):
     """Quality scores for a list of photos ({id, faces?}) with scorer/score.py in its own venv. Faces left out
-    are looked up in Immich (when the worker has its own key)."""
+    are looked up in Immich (when the worker has its own key). video_mode: fast (default) or deep."""
     py = _scorer_python()
     if not py:
         raise HTTPException(503, "scorer not installed on this worker")
+    mode = _video_mode(video_mode)
     _can_fetch(client)
     data = json.loads(items)
 
     def fn(d, prog):
         _immich_faces(data)
-        _run_script(SCORER_DIR, analyser(SCORER_DIR).get("script", "score.py"), data, d, prog, "result.json")
+        _analyse(SCORER_DIR, "score", "score.py", data, d, prog, mode)
 
     jid, d, target = _start("score", fn)
     threading.Thread(target=target, daemon=True).start()
@@ -290,15 +380,17 @@ async def post_score(items: str = Form(...), client: str = Depends(auth)):
 
 
 @app.post("/tag")
-async def post_tag(items: str = Form(...), client: str = Depends(auth)):
-    """Object/scene tags (RAM++) for a list of photos ({id}) with tagger/tag.py in its own venv."""
+async def post_tag(items: str = Form(...), video_mode: str = Form(""), client: str = Depends(auth)):
+    """Object/scene tags (RAM++) for a list of photos ({id}) with tagger/tag.py in its own venv. video_mode: fast
+    (default) or deep."""
     if not _venv_python(TAGGER_DIR):
         raise HTTPException(503, "tagger not installed on this worker")
+    mode = _video_mode(video_mode)
     _can_fetch(client)
     data = json.loads(items)
 
     def fn(d, prog):
-        _run_script(TAGGER_DIR, analyser(TAGGER_DIR).get("script", "tag.py"), data, d, prog, "result.json")
+        _analyse(TAGGER_DIR, "tag", "tag.py", data, d, prog, mode)
 
     jid, d, target = _start("tag", fn)
     threading.Thread(target=target, daemon=True).start()
