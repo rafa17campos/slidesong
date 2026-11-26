@@ -353,6 +353,9 @@ def _video_frames(data, prog):
                 frames[i] = ex.frames(i, a.get("checksum") or "", times)
                 if i in ex.unreadable:
                     print(f"warning: video {i}: ffmpeg could not read it, analysed on its preview only", flush=True)
+                elif i in ex.empty:
+                    print(f"warning: video {i}: no frame at the sampled times (its stream is shorter than Immich "
+                          "says), analysed on its preview only", flush=True)
             prog((k + 1) / len(videos))
     finally:
         videoframes.clean_cache(FRAMES, keep=ex.used, max_bytes=FRAME_CACHE_BYTES)

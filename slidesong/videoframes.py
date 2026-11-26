@@ -27,9 +27,6 @@ AT_ONCE = 4  # ffmpeg processes per video at the same time
 FRAME_TIMEOUT = 120  # s per frame
 CACHE_HOURS = 6
 CACHE_FORMAT = 1  # bump when the frames themselves change (size, tone mapping): older cache entries are redone
-# The video itself: the first video stream that is not a cover picture. ffmpeg would otherwise pick the one with the
-# most pixels, and a phone's motion-photo clip carries its 12 MP still as a second, one-frame video stream.
-STREAM = "0:V:0"
 HDR = ("smpte2084", "arib-std-b67")  # PQ and HLG: tone-mapped to SDR, as Immich does for its own preview
 TONEMAP = ("zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=hable:desat=0,"
            "zscale=t=bt709:m=bt709:r=tv,format=yuv420p")
@@ -175,7 +172,8 @@ class Extractor:
         self.check, self.log = check, log
         self._zscale = None
         self.used = set()  # cache folders of this job's videos
-        self.unreadable = set()  # videos ffmpeg failed on at every time asked (not merely found no frame at)
+        self.unreadable = set()  # videos ffmpeg failed on at every time asked
+        self.empty = set()  # videos ffmpeg read but found no frame in at any time asked
 
     def _input(self, url):
         return ["-headers", f"x-api-key: {self.key}\r\n", "-recv_buffer_size", str(RECV_BUFFER), "-i", url]
@@ -216,20 +214,41 @@ class Extractor:
                 self._zscale = False
         return self._zscale
 
-    def _filters(self, url, asset):
-        rc, out = self._run(["ffprobe", "-v", "error", *self._input(url), "-select_streams", "V:0",
-                             "-show_entries", "stream=color_transfer", "-of", "csv=p=0"], FRAME_TIMEOUT)
-        if out.strip() in HDR:
+    def _probe(self, url, asset):
+        """(ffmpeg -map of the video's own stream, -vf filters). The video's own stream is the video stream with the
+        most frames, not a cover picture: ffmpeg would otherwise pick the one with the most pixels, and a phone's
+        motion-photo clip carries its 12 MP still as an extra, one-frame video stream."""
+        rc, out = self._run(["ffprobe", "-v", "error", *self._input(url), "-select_streams", "v",
+                             "-show_entries", "stream=index,nb_frames,color_transfer:stream_disposition=attached_pic",
+                             "-of", "json"], FRAME_TIMEOUT)
+        try:
+            streams = [s for s in json.loads(out).get("streams", []) if isinstance(s.get("index"), int)]
+        except (ValueError, AttributeError):
+            streams = []
+        if not streams:
+            return "0:v:0", SCALE  # ffprobe could not tell: let ffmpeg try (and fail on its own if it must)
+
+        def frames(s):
+            try:
+                return int(s.get("nb_frames") or 0)
+            except ValueError:
+                return 0
+        own = [s for s in streams if not (s.get("disposition") or {}).get("attached_pic")] or streams
+        best = max(own, key=frames)  # the first of the longest
+        vf = SCALE
+        if best.get("color_transfer") in HDR:
             if self.has_zscale():
-                return TONEMAP + "," + SCALE
-            self.log(f"warning: video {asset} is HDR and this ffmpeg has no zscale filter: its frames are not "
-                     "tone-mapped (they look flat and grey, and score lower than they should)")
-        return SCALE
+                vf = TONEMAP + "," + SCALE
+            else:
+                self.log(f"warning: video {asset} is HDR and this ffmpeg has no zscale filter: its frames are not "
+                         "tone-mapped (they look flat and grey, and score lower than they should)")
+        return f"0:{best['index']}", vf
 
     def frames(self, asset, checksum, times):
         """[(seconds, path)] of the frames at `times` that could be read; reused from the cache when this version
         of the video (its checksum) was already extracted at these times. Only a complete extraction is cached:
-        frames missing because Immich or the network failed for a moment are tried again by the next job."""
+        frames missing for any reason (Immich or the network failing for a moment can look like a time with no
+        frame) are tried again by the next job."""
         tag = hashlib.sha1(f"{checksum}|{CACHE_FORMAT}|{times}".encode()).hexdigest()[:12]
         d = self.cache / f"{asset}-{tag}"
         meta = d / "frames.json"
@@ -245,14 +264,14 @@ class Extractor:
         shutil.rmtree(d, ignore_errors=True)
         d.mkdir(parents=True, exist_ok=True)
         url = f"{self.immich}/api/assets/{asset}/video/playback"
-        vf = self._filters(url, asset)
+        stream, vf = self._probe(url, asset)
 
         def one(t):
-            """(t, file name) of the frame; None when the video has no frame there (ffmpeg succeeded but wrote
-            nothing: the stream ends before the container says); False when ffmpeg failed or timed out."""
+            """(t, file name) of the frame; None when ffmpeg succeeded but wrote nothing (no frame there); False when
+            it failed or timed out."""
             f = d / f"{seconds(t)}.jpg"
             rc, _ = self._run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", seconds(t), *self._input(url),
-                               "-map", STREAM, "-frames:v", "1", "-vf", vf, "-q:v", "3", str(f)], FRAME_TIMEOUT)
+                               "-map", stream, "-frames:v", "1", "-vf", vf, "-q:v", "3", str(f)], FRAME_TIMEOUT)
             if rc != 0:
                 return False
             return (t, f.name) if f.exists() and f.stat().st_size > 0 else None
@@ -260,10 +279,10 @@ class Extractor:
         with ThreadPoolExecutor(AT_ONCE) as pool:
             res = list(pool.map(one, times))
         got = [x for x in res if x]
-        if False not in res:  # nothing failed: the same frames next time (Immich down for a moment: try again)
+        if len(got) == len(times):
             meta.write_text(json.dumps(got), encoding="utf-8")
         elif not got:
-            self.unreadable.add(asset)
+            (self.empty if False not in res else self.unreadable).add(asset)
         return [(t, d / f) for t, f in got]
 
 
