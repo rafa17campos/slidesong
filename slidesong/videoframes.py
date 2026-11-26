@@ -27,6 +27,9 @@ AT_ONCE = 4  # ffmpeg processes per video at the same time
 FRAME_TIMEOUT = 120  # s per frame
 CACHE_HOURS = 6
 CACHE_FORMAT = 1  # bump when the frames themselves change (size, tone mapping): older cache entries are redone
+# The video itself: the first video stream that is not a cover picture. ffmpeg would otherwise pick the one with the
+# most pixels, and a phone's motion-photo clip carries its 12 MP still as a second, one-frame video stream.
+STREAM = "0:V:0"
 HDR = ("smpte2084", "arib-std-b67")  # PQ and HLG: tone-mapped to SDR, as Immich does for its own preview
 TONEMAP = ("zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=hable:desat=0,"
            "zscale=t=bt709:m=bt709:r=tv,format=yuv420p")
@@ -172,6 +175,7 @@ class Extractor:
         self.check, self.log = check, log
         self._zscale = None
         self.used = set()  # cache folders of this job's videos
+        self.unreadable = set()  # videos ffmpeg failed on at every time asked (not merely found no frame at)
 
     def _input(self, url):
         return ["-headers", f"x-api-key: {self.key}\r\n", "-recv_buffer_size", str(RECV_BUFFER), "-i", url]
@@ -213,7 +217,7 @@ class Extractor:
         return self._zscale
 
     def _filters(self, url, asset):
-        rc, out = self._run(["ffprobe", "-v", "error", *self._input(url), "-select_streams", "v:0",
+        rc, out = self._run(["ffprobe", "-v", "error", *self._input(url), "-select_streams", "V:0",
                              "-show_entries", "stream=color_transfer", "-of", "csv=p=0"], FRAME_TIMEOUT)
         if out.strip() in HDR:
             if self.has_zscale():
@@ -244,15 +248,22 @@ class Extractor:
         vf = self._filters(url, asset)
 
         def one(t):
+            """(t, file name) of the frame; None when the video has no frame there (ffmpeg succeeded but wrote
+            nothing: the stream ends before the container says); False when ffmpeg failed or timed out."""
             f = d / f"{seconds(t)}.jpg"
             rc, _ = self._run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", seconds(t), *self._input(url),
-                               "-frames:v", "1", "-vf", vf, "-q:v", "3", str(f)], FRAME_TIMEOUT)
-            return (t, f.name) if rc == 0 and f.exists() and f.stat().st_size > 0 else None
+                               "-map", STREAM, "-frames:v", "1", "-vf", vf, "-q:v", "3", str(f)], FRAME_TIMEOUT)
+            if rc != 0:
+                return False
+            return (t, f.name) if f.exists() and f.stat().st_size > 0 else None
 
         with ThreadPoolExecutor(AT_ONCE) as pool:
-            got = [x for x in pool.map(one, times) if x]
-        if len(got) == len(times):
+            res = list(pool.map(one, times))
+        got = [x for x in res if x]
+        if False not in res:  # nothing failed: the same frames next time (Immich down for a moment: try again)
             meta.write_text(json.dumps(got), encoding="utf-8")
+        elif not got:
+            self.unreadable.add(asset)
         return [(t, d / f) for t, f in got]
 
 

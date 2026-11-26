@@ -351,7 +351,7 @@ def _video_frames(data, prog):
             times = videoframes.sample_times(videoframes.parse_duration(a.get("duration")))
             if times:  # else too short for a frame of its own: its preview only
                 frames[i] = ex.frames(i, a.get("checksum") or "", times)
-                if not frames[i]:
+                if i in ex.unreadable:
                     print(f"warning: video {i}: ffmpeg could not read it, analysed on its preview only", flush=True)
             prog((k + 1) / len(videos))
     finally:

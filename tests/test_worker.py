@@ -251,7 +251,10 @@ def _deep_worker(worker, monkeypatch, tmp_path, frames_of):
 
     def frames(self, asset, checksum, times):
         self.used.add(asset)
-        return [(t, f"/frames/{asset}/{t:g}.jpg") for t in frames_of(asset, times)]
+        got = [(t, f"/frames/{asset}/{t:g}.jpg") for t in frames_of(asset, times)]
+        if not got:
+            self.unreadable.add(asset)
+        return got
     monkeypatch.setattr(worker.videoframes.Extractor, "frames", frames)
 
 

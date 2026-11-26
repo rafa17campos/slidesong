@@ -116,9 +116,9 @@ def test_fold_leaves_out_items_with_no_line_and_videos_not_deep():
 
 
 class FakeExtractor(vf.Extractor):
-    def __init__(self, cache, fail=(), hdr=False):
+    def __init__(self, cache, fail=(), hdr=False, none=()):
         super().__init__("http://immich", "k", cache)
-        self.calls, self.fail, self.hdr = [], set(fail), hdr
+        self.calls, self.fail, self.hdr, self.none = [], set(fail), hdr, set(none)
 
     def _run(self, cmd, timeout):
         self.calls.append(cmd)
@@ -127,6 +127,8 @@ class FakeExtractor(vf.Extractor):
         t = float(cmd[cmd.index("-ss") + 1])
         if t in self.fail:
             return 1, ""
+        if t in self.none:  # ffmpeg found no frame there: success, but no file
+            return 0, ""
         open(cmd[-1], "wb").write(b"jpg")
         return 0, ""
 
@@ -218,3 +220,22 @@ def test_cache_cleanup_by_age_and_size(tmp_path):
     vf.clean_cache(tmp_path, keep=["mine"], max_bytes=250)  # the least recently used goes, not this job's
     assert sorted(p.name for p in tmp_path.iterdir()) == ["b", "mine"]
     vf.clean_cache(tmp_path / "none")  # no cache yet
+
+
+def test_frames_come_from_the_video_stream_not_a_motion_photos_still(tmp_path):
+    ex = FakeExtractor(tmp_path)
+    ex.frames("v", "s", [1])
+    probe, frame = ex.calls
+    assert probe[probe.index("-select_streams") + 1] == "V:0"
+    assert frame[frame.index("-map") + 1] == "0:V:0" and frame.index("-map") > frame.index("-i")
+
+
+def test_no_frame_at_a_time_is_not_an_unreadable_video(tmp_path):
+    ex = FakeExtractor(tmp_path, none={6})
+    assert [t for t, _ in ex.frames("v", "s", [1, 6])] == [1] and ex.unreadable == set()
+    ex = FakeExtractor(tmp_path, none={1})
+    assert ex.frames("w", "s", [1]) == [] and ex.unreadable == set()
+    again = FakeExtractor(tmp_path)
+    assert again.frames("w", "s", [1]) == [] and again.calls == []  # a definite answer: cached
+    ex = FakeExtractor(tmp_path, fail={1})
+    assert ex.frames("x", "s", [1]) == [] and ex.unreadable == {"x"}
