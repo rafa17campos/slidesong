@@ -95,7 +95,8 @@ RAM++ tags of every concept) and warns about sensitive photos from these: `shirt
 Anything else is refused (`400`). Photos are analysed the same way in both modes and their records do not change.
 
 **What is analysed.** For each item the worker asks Immich for the asset (`GET /api/assets/{id}`: type, duration,
-checksum). For a video, frames every 5 s from 1 s on (many videos open on black or a fade); a video longer than
+checksum), one request per item: a client that knows its photos are photos says so with `"type": "IMAGE"` in the
+item (Immich's name) and spares the request; the field is optional and anything else is looked up. For a video, frames every 5 s from 1 s on (many videos open on black or a fade); a video longer than
 150 s has them spread over its length so it never gets more than 30. A video under about 1.2 s gets its preview
 only. Immich's preview is always analysed too: Immich's face boxes are relative to it, so faces (smile, eyes open,
 focus, person ids) are measured on the preview only.
@@ -111,7 +112,8 @@ machine of its own.
 
 **Frames are shared by jobs.** They are kept in `WORKER_DIR/slidesong-worker/frames/`, one folder per video and
 version of it (Immich's checksum), so a client's `/tag` job and its `/score` job of the same videos extract them
-once. Folders unused for 6 h are deleted, and the oldest ones while the cache holds more than
+once. Only a complete extraction is kept: frames missing because Immich or the network failed for a moment are
+tried again by the next job. Folders unused for 6 h are deleted, and the oldest ones while the cache holds more than
 `WORKER_FRAME_CACHE_MB` (2048 MB by default; a 30-frame video takes about 3–4 MB); the frames of the running job
 are never deleted.
 
@@ -119,13 +121,14 @@ are never deleted.
 - it has no Immich key of its own (it fetches through Slidesong: `images_url` + `token`); Slidesong only asks for
   `fast`, so it serves no frames;
 - the analyser's manifest does not say `local_images`;
-- ffmpeg is not on the PATH.
+- ffmpeg or ffprobe is not on the PATH.
 
-`GET /health` says `video_modes: ["fast", "deep"]` and `video_deep` (the worker has its own Immich key and ffmpeg);
+`GET /health` says `video_modes: ["fast", "deep"]` and `video_deep` (the worker has its own Immich key, ffmpeg and ffprobe);
 `scorer_info.local_images` / `tagger_info.local_images` say whether each analyser reads frames.
 
 A video ffmpeg cannot read is analysed on its preview, with one `warning: ` line in the worker's log. A video
-Immich does not describe (the asset lookup fails) is analysed as `fast`.
+Immich does not describe (the asset lookup fails: the key needs `asset.read`) is analysed as `fast`, with one line
+in the log per job saying how many and why.
 
 **Progress and cancel.** Taking the frames counts as the first 30 % of the job (by videos), the analysers the rest
 (by output lines over every analysed image, so a video is still one item of the result). Cancelling the job stops

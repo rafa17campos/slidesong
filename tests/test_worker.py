@@ -333,3 +333,50 @@ def test_deep_progress_counts_frames_so_a_video_is_still_one_item(worker, monkey
     # two videos' frames extracted (0..0.3), then half of the 4 analysed images (0.3..1)
     assert prog.got == pytest.approx([0.15, 0.3, 0.3 + 0.7 * 2 / 4])
     assert json.loads((tmp_path / "result.json").read_text())[0]["video_frames"] == 4
+
+
+def test_deep_needs_ffprobe_too(worker, monkeypatch, capsys):
+    monkeypatch.setattr(worker, "IMMICH", "http://immich:2283")
+    monkeypatch.setattr(worker, "IMMICH_KEY", "k")
+    monkeypatch.setattr(worker.shutil, "which", lambda name: "/usr/bin/ffmpeg" if name == "ffmpeg" else None)
+    assert not worker._deep_ready({"local_images": True}) and "ffprobe" in capsys.readouterr().out
+    import shutil as sh
+    monkeypatch.setattr(sh, "which", lambda name: "/usr/bin/ffmpeg" if name == "ffmpeg" else None)
+    assert worker.health()["video_deep"] is False
+
+
+def test_deep_does_not_look_up_items_that_say_they_are_photos(worker, monkeypatch, tmp_path):
+    _deep_worker(worker, monkeypatch, tmp_path, lambda asset, times: times)
+    asked = []
+    monkeypatch.setattr(worker, "_immich_assets", lambda ids: asked.extend(ids) or {})
+    worker._video_frames([{"id": "a", "type": "IMAGE"}, {"id": "b", "type": "image"}, {"id": "v", "type": "VIDEO"},
+                          {"id": "u"}], _prog())
+    assert asked == ["v", "u"]
+
+
+def test_failed_asset_lookups_are_logged_once(worker, monkeypatch, capsys):
+    import httpx
+    monkeypatch.setattr(worker, "IMMICH", "http://immich:2283")
+    monkeypatch.setattr(worker, "IMMICH_KEY", "k")
+
+    class Resp:
+        def __init__(self, status):
+            self.status_code = status
+
+        def json(self):
+            return {"type": "VIDEO"}
+
+    class Client:
+        def __init__(self, **kw):
+            pass
+
+        def get(self, path):
+            if path.endswith("/x"):
+                raise httpx.ConnectError("down")
+            return Resp(200 if path.endswith("/ok") else 403)
+    monkeypatch.setattr(httpx, "Client", Client)
+    out = worker._immich_assets(["ok", "a", "b", "x"])
+    assert out["ok"] == {"type": "VIDEO"} and out["a"] is None and out["x"] is None
+    log = capsys.readouterr().out
+    assert log.count("Immich did not describe 3 of 4 assets") == 1 and "HTTP 403: 2" in log
+    assert "ConnectError: 1" in log

@@ -71,9 +71,14 @@ def sample_times(duration):
     return out
 
 
+def seconds(t):
+    """A frame's time as text, to the hundredth and without trailing zeros: 6, 10.33, 12345.67."""
+    return f"{t:.2f}".rstrip("0").rstrip(".")
+
+
 def frame_id(asset, t):
     """The id a frame goes by through the analysers: "<asset id>@<seconds>"."""
-    return f"{asset}@{t:g}"
+    return f"{asset}@{seconds(t)}"
 
 
 def split_id(fid):
@@ -172,9 +177,13 @@ class Extractor:
         return ["-headers", f"x-api-key: {self.key}\r\n", "-recv_buffer_size", str(RECV_BUFFER), "-i", url]
 
     def _run(self, cmd, timeout):
-        """Run ffmpeg/ffprobe, killed when the job is cancelled or it takes too long. (returncode, stdout)."""
-        with subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                              stderr=subprocess.DEVNULL) as p:
+        """Run ffmpeg/ffprobe, killed when the job is cancelled or it takes too long. (returncode, stdout); -1 when
+        it could not even start."""
+        try:
+            p = subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        except OSError:
+            return -1, ""
+        with p:
             end = time.monotonic() + timeout
             while True:
                 try:
@@ -215,7 +224,8 @@ class Extractor:
 
     def frames(self, asset, checksum, times):
         """[(seconds, path)] of the frames at `times` that could be read; reused from the cache when this version
-        of the video (its checksum) was already extracted at these times."""
+        of the video (its checksum) was already extracted at these times. Only a complete extraction is cached:
+        frames missing because Immich or the network failed for a moment are tried again by the next job."""
         tag = hashlib.sha1(f"{checksum}|{CACHE_FORMAT}|{times}".encode()).hexdigest()[:12]
         d = self.cache / f"{asset}-{tag}"
         meta = d / "frames.json"
@@ -234,14 +244,15 @@ class Extractor:
         vf = self._filters(url, asset)
 
         def one(t):
-            f = d / f"{t:g}.jpg"
-            rc, _ = self._run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", f"{t:g}", *self._input(url),
+            f = d / f"{seconds(t)}.jpg"
+            rc, _ = self._run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", seconds(t), *self._input(url),
                                "-frames:v", "1", "-vf", vf, "-q:v", "3", str(f)], FRAME_TIMEOUT)
             return (t, f.name) if rc == 0 and f.exists() and f.stat().st_size > 0 else None
 
         with ThreadPoolExecutor(AT_ONCE) as pool:
             got = [x for x in pool.map(one, times) if x]
-        meta.write_text(json.dumps(got), encoding="utf-8")
+        if len(got) == len(times):
+            meta.write_text(json.dumps(got), encoding="utf-8")
         return [(t, d / f) for t, f in got]
 
 

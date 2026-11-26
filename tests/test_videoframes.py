@@ -152,10 +152,28 @@ def test_frames_the_key_goes_in_a_header_and_reads_are_small(tmp_path):
     assert cmd.index("-ss") < cmd.index("-i") and "-recv_buffer_size" in cmd  # seek in the stream, not decode to it
 
 
-def test_frames_unreadable_are_left_out(tmp_path):
+def test_frames_unreadable_are_left_out_and_tried_again_next_job(tmp_path):
     ex = FakeExtractor(tmp_path, fail={6})
     assert [t for t, _ in ex.frames("v", "s", [1, 6, 11])] == [1, 11]
     assert FakeExtractor(tmp_path, fail={1}).frames("w", "s", [1]) == []
+    # Immich is back: the next job extracts again instead of reusing the incomplete result
+    ex = FakeExtractor(tmp_path)
+    assert [t for t, _ in ex.frames("v", "s", [1, 6, 11])] == [1, 6, 11] and ex.calls
+    assert [t for t, _ in ex.frames("w", "s", [1])] == [1]
+    ex = FakeExtractor(tmp_path)
+    ex.frames("v", "s", [1, 6, 11])
+    assert ex.calls == []  # complete now: cached
+
+
+def test_ffmpeg_that_cannot_start_reads_nothing(tmp_path):
+    ex = vf.Extractor("http://immich", "k", tmp_path)
+    assert ex._run(["no-such-ffmpeg-here"], 5) == (-1, "")
+
+
+def test_frame_times_keep_their_hundredths():
+    a = "v"
+    assert vf.seconds(6.0) == "6" and vf.seconds(10.3) == "10.3" and vf.seconds(12345.67) == "12345.67"
+    assert vf.split_id(vf.frame_id(a, 12345.67)) == (a, 12345.67)
 
 
 def test_hdr_frames_are_tone_mapped(tmp_path):

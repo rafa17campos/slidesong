@@ -158,7 +158,8 @@ def health():
             "vcodec": config.env("VCODEC", "libx264"),
             "whisper": os.environ.get("WHISPER_DEVICE", "cpu"), "ffmpeg": bool(sh.which("ffmpeg")),
             # video_mode=deep can be honoured (with analysers whose manifest says local_images)
-            "video_modes": list(VIDEO_MODES), "video_deep": bool(IMMICH and IMMICH_KEY and sh.which("ffmpeg")),
+            "video_modes": list(VIDEO_MODES),
+            "video_deep": bool(IMMICH and IMMICH_KEY and sh.which("ffmpeg") and sh.which("ffprobe")),
             # which analysers these are (docs/analysers.md): clients keep each record with its scorer's identity
             "scorer_version": sc.get("version"), "scorer_name": sc.get("name"), "scorer_info": sc,
             "tagger_model": tg.get("name"), "tagger_info": tg}
@@ -303,32 +304,45 @@ def _deep_ready(manifest):
         why = "the worker has no Immich key of its own (IMMICH_URL + IMMICH_API_KEY)"
     elif not manifest.get("local_images"):
         why = f"the analyser {manifest.get('name') or '?'} does not read local images (local_images in analyser.json)"
-    elif not shutil.which("ffmpeg"):
-        why = "ffmpeg is not on the PATH"
+    elif not (shutil.which("ffmpeg") and shutil.which("ffprobe")):
+        why = "ffmpeg or ffprobe is not on the PATH"
     if why:
         print(f"video_mode=deep: {why}; videos are analysed on their preview (fast)", flush=True)
     return not why
 
 
 def _immich_assets(ids):
-    """{asset id: Immich's asset (type, duration, checksum…) or None when it cannot be had}."""
+    """{asset id: Immich's asset (type, duration, checksum…) or None when it cannot be had}; the failures (HTTP
+    status or error) in the worker's log, once per job."""
     import httpx
     from concurrent.futures import ThreadPoolExecutor
     client = httpx.Client(base_url=IMMICH + "/api", headers={"x-api-key": IMMICH_KEY}, timeout=60)
 
+    failed = {}
+
     def one(i):
         try:
             r = client.get(f"/assets/{i}")
-            return i, (r.json() if r.status_code == 200 else None)
-        except (httpx.HTTPError, ValueError):
-            return i, None
+            if r.status_code == 200:
+                return i, r.json()
+            why = f"HTTP {r.status_code}"
+        except (httpx.HTTPError, ValueError) as e:
+            why = type(e).__name__
+        failed[why] = failed.get(why, 0) + 1
+        return i, None
     with ThreadPoolExecutor(8) as pool:
-        return dict(pool.map(one, ids))
+        out = dict(pool.map(one, ids))
+    if failed:
+        print(f"video_mode=deep: Immich did not describe {sum(failed.values())} of {len(ids)} assets "
+              f"({', '.join(f'{k}: {n}' for k, n in failed.items())}); they are analysed as fast. The worker's "
+              "Immich key needs asset.read.", flush=True)
+    return out
 
 
 def _video_frames(data, prog):
-    """(asset ids of the videos analysed deep, {asset id: [(seconds, frame file)]})."""
-    assets = _immich_assets([it["id"] for it in data])
+    """(asset ids of the videos analysed deep, {asset id: [(seconds, frame file)]}). Items that say they are
+    photos ("type": "IMAGE", as Immich names it) are not looked up."""
+    assets = _immich_assets([it["id"] for it in data if str(it.get("type", "")).upper() != "IMAGE"])
     videos = [(i, a) for i, a in assets.items() if isinstance(a, dict) and a.get("type") == "VIDEO"]
     ex = videoframes.Extractor(IMMICH, IMMICH_KEY, FRAMES, prog.check, lambda m: print(m, flush=True))
     frames = {}
