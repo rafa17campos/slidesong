@@ -240,7 +240,7 @@ def test_fast_sends_the_analyser_what_it_always_did(worker, monkeypatch, tmp_pat
                                                                    {"id": "v", "tags": ["x"]}]
 
 
-def _deep_worker(worker, monkeypatch, tmp_path, frames_of):
+def _deep_worker(worker, monkeypatch, tmp_path, frames_of, empty=False):
     monkeypatch.setattr(worker, "IMMICH", "http://immich:2283")
     monkeypatch.setattr(worker, "IMMICH_KEY", "k")
     monkeypatch.setattr(worker, "FRAMES", tmp_path / "frames")
@@ -251,7 +251,10 @@ def _deep_worker(worker, monkeypatch, tmp_path, frames_of):
 
     def frames(self, asset, checksum, times):
         self.used.add(asset)
-        return [(t, f"/frames/{asset}/{t:g}.jpg") for t in frames_of(asset, times)]
+        got = [(t, f"/frames/{asset}/{t:g}.jpg") for t in frames_of(asset, times)]
+        if not got:
+            (self.empty if empty else self.unreadable).add(asset)
+        return got
     monkeypatch.setattr(worker.videoframes.Extractor, "frames", frames)
 
 
@@ -380,3 +383,12 @@ def test_failed_asset_lookups_are_logged_once(worker, monkeypatch, capsys):
     log = capsys.readouterr().out
     assert log.count("Immich did not describe 3 of 4 assets") == 1 and "HTTP 403: 2" in log
     assert "ConnectError: 1" in log
+
+
+def test_deep_a_video_with_no_frame_anywhere_says_so(worker, monkeypatch, tmp_path, capsys):
+    _deep_worker(worker, monkeypatch, tmp_path, lambda asset, times: [], empty=True)
+    seen = []
+    _fake_script(monkeypatch, worker, lambda items: [{"id": it["id"], "tags": []} for it in items], seen)
+    worker._analyse(worker.TAGGER_DIR, "tag", "tag.py", [{"id": "v"}], tmp_path, _prog(), "deep")
+    log = capsys.readouterr().out
+    assert "warning: video v: no frame at the sampled times" in log and "could not read" not in log

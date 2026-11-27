@@ -116,17 +116,22 @@ def test_fold_leaves_out_items_with_no_line_and_videos_not_deep():
 
 
 class FakeExtractor(vf.Extractor):
-    def __init__(self, cache, fail=(), hdr=False):
+    def __init__(self, cache, fail=(), hdr=False, none=(), streams=None):
         super().__init__("http://immich", "k", cache)
-        self.calls, self.fail, self.hdr = [], set(fail), hdr
+        self.calls, self.fail, self.hdr, self.none = [], set(fail), hdr, set(none)
+        self.streams = streams if streams is not None else [
+            {"index": 0, "nb_frames": "300", "color_transfer": "arib-std-b67" if hdr else "bt709",
+             "disposition": {"attached_pic": 0}}]
 
     def _run(self, cmd, timeout):
         self.calls.append(cmd)
         if cmd[0] == "ffprobe":
-            return 0, "arib-std-b67\n" if self.hdr else "bt709\n"
+            return (0, json.dumps({"streams": self.streams})) if self.streams != "fail" else (1, "")
         t = float(cmd[cmd.index("-ss") + 1])
         if t in self.fail:
             return 1, ""
+        if t in self.none:  # ffmpeg found no frame there: success, but no file
+            return 0, ""
         open(cmd[-1], "wb").write(b"jpg")
         return 0, ""
 
@@ -218,3 +223,41 @@ def test_cache_cleanup_by_age_and_size(tmp_path):
     vf.clean_cache(tmp_path, keep=["mine"], max_bytes=250)  # the least recently used goes, not this job's
     assert sorted(p.name for p in tmp_path.iterdir()) == ["b", "mine"]
     vf.clean_cache(tmp_path / "none")  # no cache yet
+
+
+def _map(ex):
+    frame = ex.calls[-1]
+    return frame[frame.index("-map") + 1]
+
+
+def test_frames_come_from_the_video_stream_not_a_motion_photos_still(tmp_path):
+    clip = {"index": 0, "nb_frames": "47", "disposition": {"attached_pic": 0}}
+    still = {"index": 1, "nb_frames": "1", "disposition": {"attached_pic": 0}}  # 12 MP, more pixels than the clip
+    for streams, want in (([clip, still], "0:0"), ([dict(still, index=0), dict(clip, index=1)], "0:1")):
+        ex = FakeExtractor(tmp_path, streams=streams)
+        ex.frames(f"v{want}", "s", [1])
+        assert _map(ex) == want
+        frame = ex.calls[-1]
+        assert frame.index("-map") > frame.index("-i")
+    cover = {"index": 0, "nb_frames": "1", "disposition": {"attached_pic": 1}}
+    ex = FakeExtractor(tmp_path, streams=[cover, dict(clip, index=1, nb_frames=None)])
+    ex.frames("c", "s", [1])
+    assert _map(ex) == "0:1"  # a cover picture is never the video, even when the clip's frame count is unknown
+    ex = FakeExtractor(tmp_path, streams=[cover])
+    ex.frames("a", "s", [1])
+    assert _map(ex) == "0:0"  # nothing but a cover picture: better than no frame
+    ex = FakeExtractor(tmp_path, streams="fail")
+    ex.frames("f", "s", [1])
+    assert _map(ex) == "0:v:0"  # ffprobe could not tell
+
+
+def test_no_frame_is_not_unreadable_and_is_tried_again(tmp_path):
+    ex = FakeExtractor(tmp_path, none={6})
+    assert [t for t, _ in ex.frames("v", "s", [1, 6])] == [1] and not ex.unreadable and not ex.empty
+    ex = FakeExtractor(tmp_path, none={1})
+    assert ex.frames("w", "s", [1]) == [] and ex.empty == {"w"} and not ex.unreadable
+    # an interrupted read can look like a time with no frame: not cached, the next job asks again
+    again = FakeExtractor(tmp_path)
+    assert [t for t, _ in again.frames("w", "s", [1])] == [1] and again.calls
+    ex = FakeExtractor(tmp_path, fail={1})
+    assert ex.frames("x", "s", [1]) == [] and ex.unreadable == {"x"} and not ex.empty

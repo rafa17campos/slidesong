@@ -104,7 +104,9 @@ focus, person ids) are measured on the preview only.
 **How frames are read.** ffmpeg seeks straight into Immich's playback stream (`/api/assets/{id}/video/playback`,
 which serves HTTP Range) and decodes one frame per point, so a long video is not downloaded whole: about 6 MB per
 frame on a 20 Mbit/s phone video (the file's index plus one group of pictures), against the whole file otherwise.
-Frames are JPEGs about the size of Immich's preview (1440 px on the longer side), HDR videos (PQ, HLG) tone-mapped
+Frames come from the video stream with the most frames, never a cover picture: a phone's motion-photo clip (the
+hidden video half of a live photo) also carries its still as a one-frame video stream with more pixels, which ffmpeg
+would pick on its own. Frames are JPEGs about the size of Immich's preview (1440 px on the longer side), HDR videos (PQ, HLG) tone-mapped
 to SDR when the worker's ffmpeg has the `zscale` filter (a warning in the log otherwise). The worker's Immich key
 also needs `asset.view` for the playback stream (already in the list of the README). The key reaches ffmpeg as a
 command-line argument, so other processes on the GPU machine can see it: run the worker under its own user, or on a
@@ -112,8 +114,8 @@ machine of its own.
 
 **Frames are shared by jobs.** They are kept in `WORKER_DIR/slidesong-worker/frames/`, one folder per video and
 version of it (Immich's checksum), so a client's `/tag` job and its `/score` job of the same videos extract them
-once. Only a complete extraction is kept: frames missing because Immich or the network failed for a moment are
-tried again by the next job. Folders unused for 6 h are deleted, and the oldest ones while the cache holds more than
+once. Only a complete extraction is kept: frames missing for any reason (a read Immich or the network cut short
+can look like a time with no frame) are tried again by the next job. Folders unused for 6 h are deleted, and the oldest ones while the cache holds more than
 `WORKER_FRAME_CACHE_MB` (2048 MB by default; a 30-frame video takes about 3–4 MB); the frames of the running job
 are never deleted.
 
@@ -126,7 +128,8 @@ are never deleted.
 `GET /health` says `video_modes: ["fast", "deep"]` and `video_deep` (the worker has its own Immich key, ffmpeg and ffprobe);
 `scorer_info.local_images` / `tagger_info.local_images` say whether each analyser reads frames.
 
-A video ffmpeg cannot read is analysed on its preview, with one `warning: ` line in the worker's log. A video
+A video ffmpeg cannot read, or in which it finds no frame at any sampled time, is analysed on its preview, with one
+`warning: ` line in the worker's log saying which. A video
 Immich does not describe (the asset lookup fails: the key needs `asset.read`) is analysed as `fast`, with one line
 in the log per job saying how many and why.
 
